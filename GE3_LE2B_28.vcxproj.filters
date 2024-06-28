@@ -116,8 +116,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\shader\Object3d.PS.hlsl" />
-    <FxCompile Include="Engine\shader\Object3d.VS.hlsl" />
+    <FxCompile Include="resources\shader\Object3d.PS.hlsl" />
+    <FxCompile Include="resources\shader\Object3d.VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\externals\imgui\imconfig.h">
@@ -185,6 +185,6 @@
     <Text Include="Engine\externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\shader\Object3d.hlsli" />
+    <None Include="resources\shader\Object3d.hlsli" />
   </ItemGroup>
 </Project>

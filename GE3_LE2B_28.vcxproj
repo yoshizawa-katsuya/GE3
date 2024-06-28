@@ -115,11 +115,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\objects\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\shader\Object3d.PS.hlsl">
+    <FxCompile Include="resources\shader\Object3d.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\shader\Object3d.VS.hlsl">
+    <FxCompile Include="resources\shader\Object3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
@@ -150,7 +150,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include="Engine\externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\shader\Object3d.hlsli" />
+    <None Include="resources\shader\Object3d.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Engine\externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
