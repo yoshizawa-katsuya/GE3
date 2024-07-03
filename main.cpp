@@ -120,116 +120,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize(dxCommon->GetDevice(), textureManager, win->GetKClientWidth(), win->GetKClientHeight());
 
-	
-
-	//球の分割数
-	//const uint32_t kSubdivision = 16;
-	//円周率
-	//const float pi = float(M_PI);
-
-	
-	/*
-	//経度分割1つ分の角度 φ
-	const float kLonEvery = pi * 2.0f / float(kSubdivision);
-	//緯度分割1つ分の角度 θ
-	const float kLatEvery = pi / float(kSubdivision);
-	//緯度の方向に分割
-	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
-		float lat = -pi / 2.0f + kLatEvery * latIndex;	//θ
-		//経度の方向に分割しながら線を描く
-		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
-			uint32_t start = (latIndex * kSubdivision + lonIndex) * 4;
-			float lon = lonIndex * kLonEvery;	//φ
-			//頂点にデータを入力する。基準点a
-			vertexData[start].position.x = cos(lat) * cos(lon);
-			vertexData[start].position.y = sin(lat);
-			vertexData[start].position.z = cos(lat) * sin(lon);
-			vertexData[start].position.w = 1.0f;
-			vertexData[start].texcoord.x = float(lonIndex) / float(kSubdivision);
-			vertexData[start].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
-			vertexData[start].normal.x = vertexData[start].position.x;
-			vertexData[start].normal.y = vertexData[start].position.y;
-			vertexData[start].normal.z = vertexData[start].position.z;
-			//b
-			uint32_t i = 1;
-			vertexData[start + i].position.x = cos(lat + kLatEvery) * cos(lon);
-			vertexData[start + i].position.y = sin(lat + kLatEvery);
-			vertexData[start + i].position.z = cos(lat + kLatEvery) * sin(lon);
-			vertexData[start + i].position.w = 1.0f;
-			vertexData[start + i].texcoord.x = float(lonIndex) / float(kSubdivision);
-			vertexData[start + i].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision);
-			vertexData[start + i].normal.x = vertexData[start + i].position.x;
-			vertexData[start + i].normal.y = vertexData[start + i].position.y;
-			vertexData[start + i].normal.z = vertexData[start + i].position.z;
-			//c
-			i++;
-			vertexData[start + i].position.x = cos(lat) * cos(lon + kLonEvery);
-			vertexData[start + i].position.y = sin(lat);
-			vertexData[start + i].position.z = cos(lat) * sin(lon + kLonEvery);
-			vertexData[start + i].position.w = 1.0f;
-			vertexData[start + i].texcoord.x = float(lonIndex + 1) / float(kSubdivision);
-			vertexData[start + i].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
-			vertexData[start + i].normal.x = vertexData[start + i].position.x;
-			vertexData[start + i].normal.y = vertexData[start + i].position.y;
-			vertexData[start + i].normal.z = vertexData[start + i].position.z;
-			//d
-			i++;
-			vertexData[start + i].position.x = cos(lat + kLatEvery) * cos(lon + kLonEvery);
-			vertexData[start + i].position.y = sin(lat + kLatEvery);
-			vertexData[start + i].position.z = cos(lat + kLatEvery) * sin(lon + kLonEvery);
-			vertexData[start + i].position.w = 1.0f;
-			vertexData[start + i].texcoord.x = float(lonIndex + 1) / float(kSubdivision);
-			vertexData[start + i].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision);
-			vertexData[start + i].normal.x = vertexData[start + i].position.x;
-			vertexData[start + i].normal.y = vertexData[start + i].position.y;
-			vertexData[start + i].normal.z = vertexData[start + i].position.z;
-			
-
-		}
-	}
-	
-
-	//ResourceIndex
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource = CreateBufferResource(device, sizeof(uint32_t) * (kSubdivision * kSubdivision * 6));
-
-	D3D12_INDEX_BUFFER_VIEW indexBufferView{};
-	//リソースの先頭のアドレスから使う
-	indexBufferView.BufferLocation = indexResource->GetGPUVirtualAddress();
-	
-	indexBufferView.SizeInBytes = sizeof(uint32_t) * (kSubdivision * kSubdivision * 6);
-	//インデックスはuint32_tとする
-	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
-
-	//インデックスリソースにデータを書き込む
-	uint32_t* indexData = nullptr;
-	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
-
-	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
-		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
-
-			uint32_t index = (latIndex * kSubdivision + lonIndex) * 6;
-			uint32_t index2 = (latIndex * kSubdivision + lonIndex) * 4;
-
-			indexData[index] = index2;
-			uint32_t i = 1;
-			indexData[index + i] = index2 + 1;
-			i++;
-			indexData[index + i] = index2 + 2;
-			i++;
-			indexData[index + i] = index2 + 1;
-			i++;
-			indexData[index + i] = index2 + 3;
-			i++;
-			indexData[index + i] = index2 + 2;
-		}
-	}
-	*/
-
-	
-	
-	//テクスチャ切り替え用の変数
-	//bool useMonaterBall = true;
-
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -260,9 +150,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//入力の更新
 		input->Update();
 
-		if (input->TriggerKey(DIK_0)) {
-			OutputDebugStringA("Hit 0\n");
-		}
 
 		//ゲームの処理
 		gameScene->Update();
