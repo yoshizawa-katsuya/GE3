@@ -1,12 +1,16 @@
 #pragma once
 #include <Windows.h>
 #include <wrl.h>
-using namespace Microsoft::WRL;
+#define DIRECTINPUT_VERSION		0x0800	//DirectInputのバージョン指定
+#include <dinput.h>
 
 //入力
 class Input
 {
 public:
+	//namespace省略
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 	//初期化
 	void Initialize(HINSTANCE hInstance, HWND hwnd);
 
@@ -16,7 +20,7 @@ public:
 
 private:
 
-	
+	ComPtr<IDirectInputDevice8> keyboard;
 
 	
 };
