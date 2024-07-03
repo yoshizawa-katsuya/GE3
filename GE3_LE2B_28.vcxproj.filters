@@ -55,6 +55,12 @@
     <Filter Include="ヘッダー ファイル\scene">
       <UniqueIdentifier>{134ac728-9100-4706-ba82-1c2652abb654}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\input">
+      <UniqueIdentifier>{1a77b6c0-ac61-4c79-9d12-eef2798b1766}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\input">
+      <UniqueIdentifier>{6d202443-46c0-4c15-a6f0-b8e54f165814}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -113,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="Game\objects\Player.cpp">
       <Filter>ソース ファイル\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\input\Input.cpp">
+      <Filter>ソース ファイル\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="Game\scene\GameScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\input\Input.h">
+      <Filter>ヘッダー ファイル\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

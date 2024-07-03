@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "PrimitiveDrawer.h"
 #include "GameScene.h"
+#include "Input.h"
 #include <string>
 #include <format>
 #include <cassert>
@@ -99,6 +100,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// DirectX初期化
 	DirectXCommon* dxCommon = new DirectXCommon();
 	dxCommon->Initialize(win, win->GetKClientWidth(), win->GetKClientHeight());
+
+	//入力の初期化
+	Input* input = new Input();
+	input->Initialize(win->GetHinstance(), win->GetHwnd());
 
 	//TextureManager初期化
 	TextureManager* textureManager = new TextureManager();
@@ -311,6 +316,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete gameScene;
 	delete primitiveDrawer;
 	delete textureManager;
+	delete input;
 	delete dxCommon;
 	delete win;
 

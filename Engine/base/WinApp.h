@@ -20,6 +20,8 @@ public:
 
 	HWND GetHwnd() const { return hwnd_; }
 
+	HINSTANCE GetHinstance() const { return wc_.hInstance; }
+
 	const int32_t GetKClientWidth() { return kClientWidth; }
 
 	const int32_t GetKClientHeight() { return kClientHeight; }
