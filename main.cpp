@@ -260,6 +260,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//入力の更新
 		input->Update();
 
+		if (input->TriggerKey(DIK_0)) {
+			OutputDebugStringA("Hit 0\n");
+		}
+
 		//ゲームの処理
 		gameScene->Update();
 

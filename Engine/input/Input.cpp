@@ -7,18 +7,16 @@
 void Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 {
 	//DirectInputのインスタンス生成
-	ComPtr<IDirectInput8> directInput = nullptr;
-	HRESULT result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
+	HRESULT result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput_, nullptr);
 	assert(SUCCEEDED(result));
 	//キーボードデバイス生成
-	
-	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
+	result = directInput_->CreateDevice(GUID_SysKeyboard, &keyboard_, NULL);
 	assert(SUCCEEDED(result));
 	//入力データ系列のセット
-	result = keyboard->SetDataFormat(&c_dfDIKeyboard);
+	result = keyboard_->SetDataFormat(&c_dfDIKeyboard);
 	assert(SUCCEEDED(result));
 	//排他制御レベルのセット
-	result = keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = keyboard_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
 }
@@ -26,10 +24,32 @@ void Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 void Input::Update()
 {
 
-	//キーボード情報の取得開始
-	keyboard->Acquire();
-	//全キーの入力情報を取得する
-	BYTE key[256] = {};
-	keyboard->GetDeviceState(sizeof(key), key);
+	//前回のキー入力を保存
+	memcpy(keyPre_, key_, sizeof(key_));
 
+	//キーボード情報の取得開始
+	keyboard_->Acquire();
+	//全キーの入力情報を取得する
+	keyboard_->GetDeviceState(sizeof(key_), key_);
+
+}
+
+bool Input::PushKey(BYTE keyNumber)
+{
+	//指定キーを押していればtrueを返す
+	if (key_[keyNumber]) {
+		return true;
+	}
+	//そうでなければfalseを返す
+	return false;
+}
+
+bool Input::TriggerKey(BYTE keyNumber)
+{
+	//指定キーをトリガーでtrueを返す
+	if (!keyPre_[keyNumber] && key_[keyNumber]) {
+		return true;
+	}
+	//そうでなければfalseを返す
+	return false;
 }

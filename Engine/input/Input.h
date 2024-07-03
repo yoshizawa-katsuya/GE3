@@ -17,11 +17,28 @@ public:
 	//更新
 	void Update();
 
+	/// <summary>
+	/// キーの押下をチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( DIK_0 等)</param>
+	/// <returns>押されているか</returns>
+	bool PushKey(BYTE keyNumber);
+
+	/// <summary>
+	/// キーのトリガーをチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( DIK_0 等)</param>
+	/// <returns>トリガーか</returns>
+	bool TriggerKey(BYTE keyNumber);
 
 private:
 
-	ComPtr<IDirectInputDevice8> keyboard;
+	ComPtr<IDirectInputDevice8> keyboard_;
+	ComPtr<IDirectInput8> directInput_ = nullptr;
+	//全キーの入力情報
+	BYTE key_[256] = {};
+	//前回の全キーの入力情報
+	BYTE keyPre_[256] = {};
 
-	
 };
 
