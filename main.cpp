@@ -8,7 +8,6 @@
 #include "Input.h"
 #include <string>
 #include <format>
-#include <cassert>
 #include <dxgidebug.h>
 #include <dxcapi.h>
 #define _USE_MATH_DEFINES
