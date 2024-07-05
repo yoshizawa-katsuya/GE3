@@ -90,6 +90,7 @@ bool WinApp::ProcessMessage() {
 
 void WinApp::TerminateGameWindow() {
 
+	CloseWindow(hwnd_);
 	//COMの終了処理
 	CoUninitialize();
 

@@ -93,16 +93,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	D3DResourceLeakChecker leakCheck;
 
 	//ゲームウィンドウの作成
-	WinApp* win = new WinApp();
-	win->CreateGameWindow();
+	WinApp* winApp = new WinApp();
+	winApp->CreateGameWindow();
 
 	// DirectX初期化
 	DirectXCommon* dxCommon = new DirectXCommon();
-	dxCommon->Initialize(win->GetHwnd(), WinApp::kClientWidth, WinApp::kClientHeight);
+	dxCommon->Initialize(winApp->GetHwnd(), WinApp::kClientWidth, WinApp::kClientHeight);
 
 	//入力の初期化
 	Input* input = new Input();
-	input->Initialize(win->GetHinstance(), win->GetHwnd());
+	input->Initialize(winApp);
 
 	//TextureManager初期化
 	TextureManager* textureManager = new TextureManager();
@@ -123,7 +123,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(win->GetHwnd());
+	ImGui_ImplWin32_Init(winApp->GetHwnd());
 	ImGui_ImplDX12_Init(dxCommon->GetDevice(),
 		//swapChainDesc.BufferCount,
 		2,
@@ -136,7 +136,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	//ウィンドウのxボタンが押されるまでループ
 	while (true) {
-		if (win->ProcessMessage()) {
+		if (winApp->ProcessMessage()) {
 			break;
 		}
 		
@@ -189,8 +189,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	}
 
-	win->TerminateGameWindow();
-
+	
 	//ImGuiの終了処理
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
@@ -204,14 +203,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #ifdef DEBUG
 	//debugController->Relese();
 #endif // DEBUG
-	CloseWindow(win->GetHwnd());
+	
+	winApp->TerminateGameWindow();
 
+	//解放処理
 	delete gameScene;
+	gameScene = nullptr;
+
 	delete primitiveDrawer;
+	primitiveDrawer = nullptr;
+
 	delete textureManager;
+	textureManager = nullptr;
+
+	//入力開放
 	delete input;
+	input = nullptr;
+
 	delete dxCommon;
-	delete win;
+	dxCommon = nullptr;
+
+	//WindowsAPI解放
+	delete winApp;
+	winApp = nullptr;
 
 	//リソースリークチェック
 	//IDXGIDebug1* debug;
