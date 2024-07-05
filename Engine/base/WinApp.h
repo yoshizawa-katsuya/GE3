@@ -22,21 +22,17 @@ public:
 
 	HINSTANCE GetHinstance() const { return wc_.hInstance; }
 
-	const int32_t GetKClientWidth() { return kClientWidth; }
-
-	const int32_t GetKClientHeight() { return kClientHeight; }
+	//クライアント領域のサイズ
+	static const int32_t kClientWidth = 1280;
+	static const int32_t kClientHeight = 720;
 
 private:
-
-	//クライアント領域のサイズ
-	const int32_t kClientWidth = 1280;
-	const int32_t kClientHeight = 720;
 
 	//ウィンドウクラス
 	WNDCLASS wc_{};
 
+	//ウィンドウハンドル
 	HWND hwnd_ = nullptr;
 	
-
 };
 

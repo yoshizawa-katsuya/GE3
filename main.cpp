@@ -98,7 +98,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// DirectX初期化
 	DirectXCommon* dxCommon = new DirectXCommon();
-	dxCommon->Initialize(win, win->GetKClientWidth(), win->GetKClientHeight());
+	dxCommon->Initialize(win->GetHwnd(), WinApp::kClientWidth, WinApp::kClientHeight);
 
 	//入力の初期化
 	Input* input = new Input();
@@ -117,7 +117,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene();
-	gameScene->Initialize(dxCommon->GetDevice(), textureManager, win->GetKClientWidth(), win->GetKClientHeight());
+	gameScene->Initialize(dxCommon->GetDevice(), textureManager, WinApp::kClientWidth, WinApp::kClientHeight);
 
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();

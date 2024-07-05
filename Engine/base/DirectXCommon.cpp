@@ -7,14 +7,14 @@
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dxcompiler.lib")
 
-void DirectXCommon::Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight) {
+void DirectXCommon::Initialize(HWND hwnd, int32_t backBufferWidth, int32_t backBufferHeight) {
 
 	//nullptrチェック
-	assert(winApp);
+	assert(hwnd);
 	assert(4 <= backBufferWidth && backBufferWidth <= 4096);
 	assert(4 <= backBufferHeight && backBufferHeight <= 4096);
 
-	winApp_ = winApp;
+	hwnd_ = hwnd;
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
 
@@ -181,7 +181,7 @@ void DirectXCommon::CreateSwapChain() {
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	//モニタにうつしたら、中身を破棄
 
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成する
-	HRESULT hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), winApp_->GetHwnd(), &swapChainDesc, nullptr, nullptr,
+	HRESULT hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), hwnd_, &swapChainDesc, nullptr, nullptr,
 		reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 

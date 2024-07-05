@@ -13,7 +13,7 @@ class DirectXCommon
 public:
 
 	//初期化
-	void Initialize(WinApp* winApp, int32_t backBufferWidth, int32_t backBufferHeight);
+	void Initialize(HWND hwnd, int32_t backBufferWidth, int32_t backBufferHeight);
 
 	//DXGIデバイス初期化
 	void InitializeDXGIDevice();
@@ -66,7 +66,7 @@ public:
 private:
 
 	// ウィンドウズアプリケーション管理
-	WinApp* winApp_;
+	HWND hwnd_;
 
 	int32_t backBufferWidth_ = 0;
 	int32_t backBufferHeight_ = 0;
