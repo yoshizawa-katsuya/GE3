@@ -74,11 +74,13 @@ bool WinApp::ProcessMessage() {
 
 	MSG msg{};
 
+	//メッセージを読み取る
 	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
 
+	//終了メッセージ
 	if (msg.message == WM_QUIT) {
 
 		return true;
