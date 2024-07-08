@@ -1,39 +1,31 @@
 #include "PrimitiveDrawer.h"
 #include <cassert>
 #include <format>
+#include "DirectXCommon.h"
 
-void PrimitiveDrawer::Initialize(ID3D12Device* device) {
+void PrimitiveDrawer::Initialize(DirectXCommon* dxCommon) {
 
-	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeNone)) = CreateGraphicsPipeline(BlendMode::kBlendModeNone, device);
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeNone)) = CreateGraphicsPipeline(BlendMode::kBlendModeNone, dxCommon);
 
-	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeNormal)) = CreateGraphicsPipeline(BlendMode::kBlendModeNormal, device);
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeNormal)) = CreateGraphicsPipeline(BlendMode::kBlendModeNormal, dxCommon);
 
-	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeAdd)) = CreateGraphicsPipeline(BlendMode::kBlendModeAdd, device);
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeAdd)) = CreateGraphicsPipeline(BlendMode::kBlendModeAdd, dxCommon);
 
-	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeSubtract)) = CreateGraphicsPipeline(BlendMode::kBlendModeSubtract, device);
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeSubtract)) = CreateGraphicsPipeline(BlendMode::kBlendModeSubtract, dxCommon);
 	
-	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeMultiply)) = CreateGraphicsPipeline(BlendMode::kBlendModeMultiply, device);
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeMultiply)) = CreateGraphicsPipeline(BlendMode::kBlendModeMultiply, dxCommon);
 
-	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeScreen)) = CreateGraphicsPipeline(BlendMode::kBlendModeScreen, device);
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeScreen)) = CreateGraphicsPipeline(BlendMode::kBlendModeScreen, dxCommon);
 
 }
 
-std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPipeline(BlendMode blendMode, ID3D12Device* device) {
+std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPipeline(BlendMode blendMode, DirectXCommon* dxCommon) {
 
 	std::unique_ptr<PipelineSet> pipelineSet = std::make_unique<PipelineSet>();
 
-	//dxcCompilerを初期化
-	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils = nullptr;
-	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler = nullptr;
-	HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
-	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
-	assert(SUCCEEDED(hr));
+	
 
-	//includeに対応するための設定
-	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler = nullptr;
-	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
-	assert(SUCCEEDED(hr));
+	
 
 	//RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
@@ -85,14 +77,14 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 	//シリアナイズしてバイナリにする
 	Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
+	HRESULT hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
-	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
+	hr = dxCommon->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
 		signatureBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineSet->rootSignature));
 	assert(SUCCEEDED(hr));
 
@@ -173,11 +165,11 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 
 	//Shaderをコンパイルする
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = CompilerShader(L"resources/shader/Object3d.VS.hlsl",
-		L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
+		L"vs_6_0", dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 	assert(vertexShaderBlob != nullptr);
 
 	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = CompilerShader(L"resources/shader/Object3d.PS.hlsl",
-		L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
+		L"ps_6_0", dxCommon->GetDxcUtils(), dxCommon->GetDxcCompiler(), dxCommon->GetIncludeHandler());
 	assert(pixelShaderBlob != nullptr);
 
 	//DepthStencilStateの設定
@@ -214,7 +206,7 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 	//実際に生成
-	hr = device->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	hr = dxCommon->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&pipelineSet->graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 

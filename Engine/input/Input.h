@@ -5,13 +5,13 @@
 #include <dinput.h>
 #include "WinApp.h"
 
+using namespace Microsoft::WRL;
+
 //入力
 class Input
 {
 public:
-	//namespace省略
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-
+	
 	//初期化
 	void Initialize(WinApp* winApp);
 

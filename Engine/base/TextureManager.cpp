@@ -2,18 +2,23 @@
 #include <dxcapi.h>
 #include <cassert>
 
-void TextureManager::Initialize(ID3D12Device* device) {
+void TextureManager::Initialize(DirectXCommon* dxCommon) {
 
-	assert(device);
+	assert(dxCommon);
 
-	device_ = device;
+	dxCommon_ = dxCommon;
 
-	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	device_ = dxCommon->GetDevice();
+
+	descriptorSizeSRV_ = dxCommon->GetDescriptorSizeSRV();
+
+	kNumDescriptors_ = dxCommon->GetkNumSrvDescriptors_();
 
 	index_ = 0;
 
+	srvDescriptorHeap_ = dxCommon->GetSRVDescriptorHeap();
 	//全テクスチャリセット
-	ResetAll();
+	//ResetAll();
 
 }
 
@@ -42,8 +47,8 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 
 	//SRVを作成するDescriptorHeapの場所を決める。先頭はImGuiが使っているのでその次を使う
 	index_++;
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = GetCPUDescriptorHandle(srvDescriptorHeap_, descriptorSizeSRV_, index_);
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = GetGPUDescriptorHandle(srvDescriptorHeap_, descriptorSizeSRV_, index_);
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = dxCommon_->GetSRVCPUDescriptorHandle(index_);
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = dxCommon_->GetSRVGPUDescriptorHandle(index_);
 	
 
 	//SRVの生成
@@ -161,20 +166,6 @@ void TextureManager::UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> te
 	}
 
 
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE TextureManager::GetCPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index)
-{
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
-	return handleCPU;
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetGPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index)
-{
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
-	return handleGPU;
 }
 
 std::wstring TextureManager::ConvertString(const std::string& str) {

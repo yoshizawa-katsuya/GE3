@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <array>
 #include <memory>
+class DirectXCommon;
 
 //ブレンドモード
 enum class BlendMode {
@@ -34,10 +35,10 @@ public:
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState;
 	};
 
-	void Initialize(ID3D12Device* device);
+	void Initialize(DirectXCommon* dxCommon);
 
 	//パイプライン生成
-	std::unique_ptr<PipelineSet> CreateGraphicsPipeline(BlendMode blendMode, ID3D12Device* device);
+	std::unique_ptr<PipelineSet> CreateGraphicsPipeline(BlendMode blendMode, DirectXCommon* dxCommon);
 
 	Microsoft::WRL::ComPtr<IDxcBlob> CompilerShader(
 		//CompilerするShaderファイルへのパス

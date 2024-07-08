@@ -6,14 +6,12 @@
 #include "PrimitiveDrawer.h"
 #include "GameScene.h"
 #include "Input.h"
+#include "dx12.h"
 #include <format>
 #include <dxgidebug.h>
 #include <dxcapi.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_dx12.h"
-#include "imgui/imgui_impl_win32.h"
 
 
 /*
@@ -59,7 +57,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// DirectX初期化
 	DirectXCommon* dxCommon = new DirectXCommon();
-	dxCommon->Initialize(winApp->GetHwnd(), WinApp::kClientWidth, WinApp::kClientHeight);
+	dxCommon->Initialize(winApp);
 
 	//入力の初期化
 	Input* input = new Input();
@@ -67,11 +65,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//TextureManager初期化
 	TextureManager* textureManager = new TextureManager();
-	textureManager->Initialize(dxCommon->GetDevice());
+	textureManager->Initialize(dxCommon);
 
 	//PSOの設定
 	PrimitiveDrawer* primitiveDrawer = new PrimitiveDrawer();
-	primitiveDrawer->Initialize(dxCommon->GetDevice());
+	primitiveDrawer->Initialize(dxCommon);
 
 	//DescriptorSizeを取得しておく
 	const uint32_t descriptorSizeSRV = dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -80,20 +78,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize(dxCommon->GetDevice(), textureManager, WinApp::kClientWidth, WinApp::kClientHeight);
 
-	//ImGuiの初期化
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(winApp->GetHwnd());
-	ImGui_ImplDX12_Init(dxCommon->GetDevice(),
-		//swapChainDesc.BufferCount,
-		2,
-		//rtvDesc.Format,
-		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-		textureManager->GetSrvDescriptorHeap(),
-		dxCommon->GetCPUDescriptorHandle(textureManager->GetSrvDescriptorHeap(), descriptorSizeSRV, 0),
-		textureManager->GetGPUDescriptorHandle(textureManager->GetSrvDescriptorHeap(), descriptorSizeSRV, 0));
-
+	
 	
 	//ウィンドウのxボタンが押されるまでループ
 	while (true) {

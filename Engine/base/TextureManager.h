@@ -4,6 +4,7 @@
 #include <d3d12.h>
 #include <string>
 #include <wrl.h>
+#include "DirectXCommon.h"
 #include "DirectXTex/DirectXTex.h"
 
 class TextureManager
@@ -11,7 +12,7 @@ class TextureManager
 public:
 
 	//初期化
-	void Initialize(ID3D12Device* device);
+	void Initialize(DirectXCommon* dxCommon);
 
 	//全テクスチャリセット
 	void ResetAll();
@@ -37,12 +38,8 @@ public:
 	//TextureResourceにデータを転送する
 	void UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 
-	//DescriptorHandleを取得する関数。CPU
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	//DescriptorHandleを取得する関数。GPU
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
+	
+	
 	std::wstring ConvertString(const std::string& str);
 
 	std::string ConvertString(const std::wstring& str);
@@ -63,6 +60,8 @@ public:
 
 private:
 
+	DirectXCommon* dxCommon_;
+
 	//デバイス
 	Microsoft::WRL::ComPtr<ID3D12Device> device_;
 
@@ -73,7 +72,7 @@ private:
 	uint32_t index_;
 
 	// デスクリプターの数
-	const UINT kNumDescriptors_ = 128;
+	UINT kNumDescriptors_;
 
 	// テクスチャコンテナ
 	std::array<Texture, 128> textures_;
