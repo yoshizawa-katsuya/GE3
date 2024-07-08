@@ -90,9 +90,6 @@
     <ClCompile Include="Engine\base\DirectXCommon.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\lib\dx12.cpp">
-      <Filter>ソース ファイル\base</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\base\WinApp.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
@@ -123,6 +120,9 @@
     <ClCompile Include="Engine\input\Input.cpp">
       <Filter>ソース ファイル\input</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\lib\dx12.cpp">
+      <Filter>ソース ファイル\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl" />
@@ -152,9 +152,6 @@
     </ClInclude>
     <ClInclude Include="Engine\externals\imgui\imstb_truetype.h">
       <Filter>ヘッダー ファイル\externals</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\lib\dx12.h">
-      <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
     <ClInclude Include="Engine\base\DirectXCommon.h">
       <Filter>ヘッダー ファイル\base</Filter>
@@ -191,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="Engine\input\Input.h">
       <Filter>ヘッダー ファイル\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\lib\dx12.h">
+      <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

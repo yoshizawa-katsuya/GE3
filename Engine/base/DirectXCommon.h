@@ -56,12 +56,6 @@ public:
 	//描画コマンドリストの取得
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
 
-	//ログ
-	void Log(const std::string& message);
-
-	std::wstring ConvertString(const std::string& str);
-
-	std::string ConvertString(const std::wstring& str);
 
 private:
 
