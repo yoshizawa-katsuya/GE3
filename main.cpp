@@ -71,9 +71,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	PrimitiveDrawer* primitiveDrawer = new PrimitiveDrawer();
 	primitiveDrawer->Initialize(dxCommon);
 
-	//DescriptorSizeを取得しておく
-	const uint32_t descriptorSizeSRV = dxCommon->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize(dxCommon->GetDevice(), textureManager, WinApp::kClientWidth, WinApp::kClientHeight);

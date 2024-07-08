@@ -372,9 +372,7 @@ void DirectXCommon::ImGuiInitialize()
 
 void DirectXCommon::PreDraw() {
 
-	//DescriptorSizeを取得しておく
-	const uint32_t descriptorSizeDSV = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
+	
 	//これから書き込むバックバッファのインデックスを取得
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -404,7 +402,8 @@ void DirectXCommon::PreDraw() {
 	//指定した深度で画面全体をクリアする
 	commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-	
+	//描画用のDescriptorHeapの設定
+	commandList_->SetDescriptorHeaps(1, srvDescriptorHeap_.GetAddressOf());
 
 	commandList_->RSSetViewports(1, &viewport_);	//Viewportを設定
 

@@ -64,9 +64,7 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 
 void TextureManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle) {
 
-	//描画用のDescriptorHeapの設定
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap_ };
-	commandList->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
+	
 
 
 	// シェーダリソースビューをセット
