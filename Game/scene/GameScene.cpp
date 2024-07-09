@@ -10,15 +10,15 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(ID3D12Device* device, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight) {
+void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight) {
 
-	device_ = device;
+	dxCommon_ = dxCommon;
 	textureManager_ = textureManager;
 	kClientWidth_ = kClientWidth;
 	kClientHeight_ = kClientHeight;
 
 	//平行光源用のResourceを作成
-	directionalLightResource_ = CreateBufferResource(device_, sizeof(DirectionalLight));
+	directionalLightResource_ = dxCommon_->CreateBufferResource(sizeof(DirectionalLight));
 	//データを書き込む
 	//書き込むためのアドレスを取得
 	directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
@@ -32,10 +32,10 @@ void GameScene::Initialize(ID3D12Device* device, TextureManager* textureManager,
 
 	textureHandle1 = textureManager_->Load("resources/uvChecker.png");
 
-	model_ = std::make_unique<Model>(device_.Get(), &cameratransform, textureManager_, kClientWidth_, kClientHeight_);
+	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, textureManager_, kClientWidth_, kClientHeight_);
 	model_->CreateFromOBJ("./resources", "plane.obj");
 
-	sprite_ = std::make_unique<Sprite>(device_.Get(), textureHandle1, Vector2{320.0f, 180.0f}, Vector2{640.0f, 360.0f}, Vector4{1.0f, 1.0f, 1.0f, 1.0f}, kClientWidth_, kClientHeight_);
+	sprite_ = std::make_unique<Sprite>(dxCommon_->GetDevice(), textureHandle1, Vector2{320.0f, 180.0f}, Vector2{640.0f, 360.0f}, Vector4{1.0f, 1.0f, 1.0f, 1.0f}, kClientWidth_, kClientHeight_);
 
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();

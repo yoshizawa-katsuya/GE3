@@ -32,9 +32,7 @@ public:
 	//Textureデータを読む
 	DirectX::ScratchImage LoadTexture(const std::string& filePath);
 
-	//TextureResourceを作る
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, const DirectX::TexMetadata& metadata);
-
+	
 	//TextureResourceにデータを転送する
 	void UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
 

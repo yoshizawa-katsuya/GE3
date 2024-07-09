@@ -11,6 +11,7 @@
 #include "imgui/imgui_impl_dx12.h"
 #include "imgui/imgui_impl_win32.h"
 #include "WinApp.h"
+#include "DirectXTex/DirectXTex.h"
 
 class DirectXCommon
 {
@@ -25,6 +26,18 @@ public:
 	//描画後処理
 	void PostDraw();
 	
+	Microsoft::WRL::ComPtr<IDxcBlob> CompilerShader(
+		//CompilerするShaderファイルへのパス
+		const std::wstring& filePath,
+		//Compilerに使用するProfile
+		const wchar_t* profile);
+
+	//Resource作成の関数化
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);
+
+	//TextureResourceを作る
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata);
+
 	// デバイスの取得
 	ID3D12Device* GetDevice() const { return device_.Get(); }
 

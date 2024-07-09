@@ -40,15 +40,7 @@ public:
 	//パイプライン生成
 	std::unique_ptr<PipelineSet> CreateGraphicsPipeline(BlendMode blendMode, DirectXCommon* dxCommon);
 
-	Microsoft::WRL::ComPtr<IDxcBlob> CompilerShader(
-		//CompilerするShaderファイルへのパス
-		const std::wstring& filePath,
-		//Compilerに使用するProfile
-		const wchar_t* profile,
-		//初期化で生成したものを3つ
-		Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils,
-		Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler,
-		Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler);
+	
 
 	void Log(const std::string& message);
 

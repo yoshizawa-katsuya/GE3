@@ -15,7 +15,7 @@ public:
 
 	~GameScene();
 
-	void Initialize(ID3D12Device* device, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight);
+	void Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight);
 
 	void Update();
 
@@ -27,7 +27,7 @@ private:
 	int32_t kClientHeight_;
 
 	//デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	DirectXCommon* dxCommon_;
 
 	TextureManager* textureManager_;
 

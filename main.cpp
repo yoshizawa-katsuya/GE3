@@ -7,6 +7,7 @@
 #include "GameScene.h"
 #include "Input.h"
 #include "dx12.h"
+#include "D3DResourceLeakChecker.h"
 #include <format>
 #include <dxgidebug.h>
 #include <dxcapi.h>
@@ -14,37 +15,6 @@
 #include <math.h>
 
 
-/*
-class ResourceObject {
-public:
-	ResourceObject(ID3D12Resource* resource)
-		:resource_(resource)
-	{}
-	~ResourceObject() {
-		if (resource_) {
-			resource_->Release();
-		}
-	}
-	ID3D12Resource* Get() { return resource_; }
-
-private:
-	ID3D12Resource* resource_;
-};
-*/
-struct D3DResourceLeakChecker
-{
-	~D3DResourceLeakChecker()
-	{
-		//リソースリークチェック
-		Microsoft::WRL::ComPtr<IDXGIDebug1> debug;
-		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
-			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-			debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-			debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-			debug->Release();
-		}
-	}
-};
 
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -73,7 +43,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene();
-	gameScene->Initialize(dxCommon->GetDevice(), textureManager, WinApp::kClientWidth, WinApp::kClientHeight);
+	gameScene->Initialize(dxCommon, textureManager, WinApp::kClientWidth, WinApp::kClientHeight);
 
 	
 	
