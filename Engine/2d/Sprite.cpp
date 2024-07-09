@@ -2,7 +2,7 @@
 #include "Matrix.h"
 #include <cassert>
 
-Sprite::Sprite(ID3D12Device* device, uint32_t textureHandle, Vector2 position, Vector2 size, Vector4 color, const int32_t kClientWidth, const int32_t kClientHeight) {
+void Sprite::Initialize(ID3D12Device* device, uint32_t textureHandle, Vector2 position, Vector2 size, Vector4 color, const int32_t kClientWidth, const int32_t kClientHeight) {
 
 	device_ = device;
 	textureHandle_ = textureHandle;

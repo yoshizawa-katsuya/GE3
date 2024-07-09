@@ -35,7 +35,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManag
 	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, textureManager_, kClientWidth_, kClientHeight_);
 	model_->CreateFromOBJ("./resources", "plane.obj");
 
-	sprite_ = std::make_unique<Sprite>(dxCommon_->GetDevice(), textureHandle1, Vector2{320.0f, 180.0f}, Vector2{640.0f, 360.0f}, Vector4{1.0f, 1.0f, 1.0f, 1.0f}, kClientWidth_, kClientHeight_);
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->Initialize(dxCommon_->GetDevice(), textureHandle1, Vector2{ 320.0f, 180.0f }, Vector2{ 640.0f, 360.0f }, Vector4{ 1.0f, 1.0f, 1.0f, 1.0f }, kClientWidth_, kClientHeight_);
 
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
@@ -104,6 +105,6 @@ void GameScene::Draw(ID3D12GraphicsCommandList* commandList, PrimitiveDrawer* pr
 	//model_->Draw(commandList);
 
 	//Spriteの描画。変更が必要なものだけ変更する
-	//sprite_->Draw(commandList, textureManager_);
+	sprite_->Draw(commandList, textureManager_);
 
 }

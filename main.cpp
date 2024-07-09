@@ -2,6 +2,7 @@
 #include "DirectXCommon.h"
 #include "TextureManager.h"
 #include "Sprite.h"
+#include "SpritePlatform.h"
 #include "Model.h"
 #include "PrimitiveDrawer.h"
 #include "GameScene.h"
@@ -22,27 +23,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	D3DResourceLeakChecker leakCheck;
 
 	//ゲームウィンドウの作成
-	WinApp* winApp = new WinApp();
+	WinApp* winApp = new WinApp;
 	winApp->Initialize();
 
 	// DirectX初期化
-	DirectXCommon* dxCommon = new DirectXCommon();
+	DirectXCommon* dxCommon = new DirectXCommon;
 	dxCommon->Initialize(winApp);
 
 	//入力の初期化
-	Input* input = new Input();
+	Input* input = new Input;
 	input->Initialize(winApp);
 
 	//TextureManager初期化
-	TextureManager* textureManager = new TextureManager();
+	TextureManager* textureManager = new TextureManager;
 	textureManager->Initialize(dxCommon);
 
 	//PSOの設定
-	PrimitiveDrawer* primitiveDrawer = new PrimitiveDrawer();
+	PrimitiveDrawer* primitiveDrawer = new PrimitiveDrawer;
 	primitiveDrawer->Initialize(dxCommon);
 
+	//スプライト共通部の初期化
+	SpritePlatform* spritePlatform = new SpritePlatform;
+	spritePlatform->Initialize();
+
 	//ゲームシーンの初期化
-	GameScene* gameScene = new GameScene();
+	GameScene* gameScene = new GameScene;
 	gameScene->Initialize(dxCommon, textureManager, WinApp::kClientWidth, WinApp::kClientHeight);
 
 	
@@ -124,6 +129,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//解放処理
 	delete gameScene;
 	gameScene = nullptr;
+
+	delete spritePlatform;
+	spritePlatform = nullptr;
 
 	delete primitiveDrawer;
 	primitiveDrawer = nullptr;
