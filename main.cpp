@@ -44,11 +44,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//スプライト共通部の初期化
 	SpritePlatform* spritePlatform = new SpritePlatform;
-	spritePlatform->Initialize();
+	spritePlatform->Initialize(dxCommon, primitiveDrawer);
 
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene;
-	gameScene->Initialize(dxCommon, textureManager, WinApp::kClientWidth, WinApp::kClientHeight);
+	gameScene->Initialize(dxCommon, textureManager);
 
 	
 	
@@ -98,7 +98,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		dxCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-		gameScene->Draw(dxCommon->GetCommandList(), primitiveDrawer);
+		gameScene->Draw(primitiveDrawer, spritePlatform);
 
 		
 		

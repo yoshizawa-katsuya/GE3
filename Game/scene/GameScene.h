@@ -4,7 +4,7 @@
 #include "Struct.h"
 #include "DirectXCommon.h"
 #include "TextureManager.h"
-#include "PrimitiveDrawer.h"
+#include "SpritePlatform.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "Player.h"
@@ -15,16 +15,15 @@ public:
 
 	~GameScene();
 
-	void Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight);
+	void Initialize(DirectXCommon* dxCommon, TextureManager* textureManager);
 
 	void Update();
 
-	void Draw(ID3D12GraphicsCommandList* commandList, PrimitiveDrawer* primitiveDrawer);
+	void Draw(PrimitiveDrawer* primitiveDrawer, SpritePlatform* spritePlatform);
 
 private:
 
-	int32_t kClientWidth_;
-	int32_t kClientHeight_;
+	
 
 	//デバイス
 	DirectXCommon* dxCommon_;

@@ -10,12 +10,10 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight) {
+void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManager) {
 
 	dxCommon_ = dxCommon;
 	textureManager_ = textureManager;
-	kClientWidth_ = kClientWidth;
-	kClientHeight_ = kClientHeight;
 
 	//平行光源用のResourceを作成
 	directionalLightResource_ = dxCommon_->CreateBufferResource(sizeof(DirectionalLight));
@@ -32,11 +30,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManag
 
 	textureHandle1 = textureManager_->Load("resources/uvChecker.png");
 
-	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, textureManager_, kClientWidth_, kClientHeight_);
+	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, textureManager_,  WinApp::kClientWidth, WinApp::kClientHeight);
 	model_->CreateFromOBJ("./resources", "plane.obj");
 
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(dxCommon_->GetDevice(), textureHandle1, Vector2{ 320.0f, 180.0f }, Vector2{ 640.0f, 360.0f }, Vector4{ 1.0f, 1.0f, 1.0f, 1.0f }, kClientWidth_, kClientHeight_);
+	sprite_->Initialize(dxCommon_->GetDevice(), textureHandle1, Vector2{ 320.0f, 180.0f }, Vector2{ 640.0f, 360.0f }, Vector4{ 1.0f, 1.0f, 1.0f, 1.0f }, WinApp::kClientWidth, WinApp::kClientHeight);
 
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
@@ -89,22 +87,25 @@ void GameScene::Update() {
 
 }
 
-void GameScene::Draw(ID3D12GraphicsCommandList* commandList, PrimitiveDrawer* primitiveDrawer) {
+void GameScene::Draw(PrimitiveDrawer* primitiveDrawer, SpritePlatform* spritePlatform) {
 
-	primitiveDrawer->SetPipelineSet(commandList, static_cast<BlendMode>(blendMode));
+	primitiveDrawer->SetPipelineSet(dxCommon_->GetCommandList(), static_cast<BlendMode>(blendMode));
 
 
 	//dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonaterBall ? textureSrvHandleGPU2 : textureSrvHandleGPU);
 	//DirectionalRight
-	commandList->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
 	//プレイヤーの描画
-	player_->Draw(commandList);
+	player_->Draw(dxCommon_->GetCommandList());
 
 	//modelの描画
 	//model_->Draw(commandList);
 
+	//Spriteの描画準備。Spriteの描画に共通のグラフィックスコマンドを積む
+	spritePlatform->PreDraw();
+
 	//Spriteの描画。変更が必要なものだけ変更する
-	sprite_->Draw(commandList, textureManager_);
+	sprite_->Draw(dxCommon_->GetCommandList(), textureManager_);
 
 }

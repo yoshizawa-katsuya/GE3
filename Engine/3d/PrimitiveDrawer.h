@@ -40,8 +40,6 @@ public:
 	//パイプライン生成
 	std::unique_ptr<PipelineSet> CreateGraphicsPipeline(BlendMode blendMode, DirectXCommon* dxCommon);
 
-	
-
 	void Log(const std::string& message);
 
 	std::wstring ConvertString(const std::string& str);
