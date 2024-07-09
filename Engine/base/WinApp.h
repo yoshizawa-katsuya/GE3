@@ -9,8 +9,8 @@ public:
 	//ウィンドウプロシージャ
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-	//ゲームウィンドウの作成
-	void CreateGameWindow();
+	//初期化
+	void Initialize();
 
 	//メッセージの処理
 	bool ProcessMessage();
@@ -27,6 +27,9 @@ public:
 	static const int32_t kClientHeight = 720;
 
 private:
+
+	//ゲームウィンドウの作成
+	void CreateGameWindow();
 
 	//ウィンドウクラス
 	WNDCLASS wc_{};

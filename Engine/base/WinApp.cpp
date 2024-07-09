@@ -3,6 +3,8 @@
 #include "imgui/imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+#pragma comment(lib, "winmm.lib")
+
 //ウィンドウプロシージャ
 LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
@@ -23,6 +25,16 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 
 	//標準のメッセージ処理を行う
 	return DefWindowProc(hwnd, msg, wparam, lparam);
+
+}
+
+void WinApp::Initialize()
+{
+
+	CreateGameWindow();
+
+	//システムタイマーの分解能を上げる
+	timeBeginPeriod(1);
 
 }
 

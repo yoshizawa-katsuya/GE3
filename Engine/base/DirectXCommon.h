@@ -7,6 +7,7 @@
 #include <wrl.h>
 #include <string>
 #include <array>
+#include <chrono>
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx12.h"
 #include "imgui/imgui_impl_win32.h"
@@ -121,6 +122,12 @@ private:
 	//ImGuiの初期化
 	void ImGuiInitialize();
 
+	//FPS固定初期化
+	void InitializeFixFPS();
+
+	//FPS固定更新
+	void UpdateFixFPS();
+
 	//DepthStencilTextureを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(int32_t width, int32_t height);
 
@@ -164,5 +171,9 @@ private:
 	D3D12_VIEWPORT viewport_{};
 
 	D3D12_RECT scissorRect_{};
+
+	//記録時間(FPS固定用)
+	std::chrono::steady_clock::time_point referance_;
+
 };
 

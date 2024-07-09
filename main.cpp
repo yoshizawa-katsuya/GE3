@@ -23,7 +23,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//ゲームウィンドウの作成
 	WinApp* winApp = new WinApp();
-	winApp->CreateGameWindow();
+	winApp->Initialize();
 
 	// DirectX初期化
 	DirectXCommon* dxCommon = new DirectXCommon();
