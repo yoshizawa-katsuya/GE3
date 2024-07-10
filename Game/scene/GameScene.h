@@ -15,11 +15,11 @@ public:
 
 	~GameScene();
 
-	void Initialize(DirectXCommon* dxCommon, TextureManager* textureManager);
+	void Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, SpritePlatform* spritePlatform);
 
 	void Update();
 
-	void Draw(PrimitiveDrawer* primitiveDrawer, SpritePlatform* spritePlatform);
+	void Draw(PrimitiveDrawer* primitiveDrawer);
 
 private:
 
@@ -29,6 +29,8 @@ private:
 	DirectXCommon* dxCommon_;
 
 	TextureManager* textureManager_;
+
+	SpritePlatform* spritePlatform_;
 
 	int blendMode = static_cast<int>(BlendMode::kBlendModeNone);
 

@@ -5,19 +5,19 @@
 #include <wrl.h>
 #include "Struct.h"
 #include "TextureManager.h"
+class SpritePlatform;
 
 class Sprite
 {
 public:
 
-	void Initialize(ID3D12Device* device, uint32_t textureHandle, Vector2 position, Vector2 size, Vector4 color, const int32_t kClientWidth, const int32_t kClientHeight);
+	//初期化
+	void Initialize(uint32_t textureHandle, Vector2 position, Vector2 size, Vector4 color, SpritePlatform* spritePlatform);
 
 	//描画
 	void Draw(ID3D12GraphicsCommandList* commandList, TextureManager* textureManager);
 
-	//Resource作成の関数化
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(Microsoft::WRL::ComPtr<ID3D12Device> device, size_t sizeInBytes);
-
+	
 	Transforms GetTransform() { return transform_; }
 	Transforms GetUVTransform() { return uvTransform_; }
 
@@ -26,22 +26,29 @@ public:
 
 private:
 
-	int32_t kClientWidth_;
-	int32_t kClientHeight_;
+	//頂点データ作成
+	void CreateVertexData(Vector2 position, Vector2 size);
 
-	//デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	//マテリアルデータ作成
+	void CreateMaterialData(Vector4 color);
 
+	//座標行列変換データ作成
+	void CreateTransformData();
+
+	
+
+	SpritePlatform* spritePlatform_ = nullptr;
 
 	//頂点バッファビューを作成する
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-
+	VertexData* vertexData_ = nullptr;
 
 	//IBV
 	//Sprite用のIndexResource
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+	uint32_t* indexData_ = nullptr;
 
 	//Sprite用のマテリアルリソースを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
@@ -63,7 +70,7 @@ private:
 		{0.0f, 0.0f, 0.0f},
 	};
 
-	uint32_t textureHandle_;
+	uint32_t textureHandle_ = 1;
 
 };
 

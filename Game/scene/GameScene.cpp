@@ -10,10 +10,11 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManager) {
+void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, SpritePlatform* spritePlatform) {
 
 	dxCommon_ = dxCommon;
 	textureManager_ = textureManager;
+	spritePlatform_ = spritePlatform;
 
 	//平行光源用のResourceを作成
 	directionalLightResource_ = dxCommon_->CreateBufferResource(sizeof(DirectionalLight));
@@ -34,7 +35,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManag
 	model_->CreateFromOBJ("./resources", "plane.obj");
 
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(dxCommon_->GetDevice(), textureHandle1, Vector2{ 320.0f, 180.0f }, Vector2{ 640.0f, 360.0f }, Vector4{ 1.0f, 1.0f, 1.0f, 1.0f }, WinApp::kClientWidth, WinApp::kClientHeight);
+	sprite_->Initialize(textureHandle1, Vector2{ 320.0f, 180.0f }, Vector2{ 640.0f, 360.0f }, Vector4{ 1.0f, 1.0f, 1.0f, 1.0f }, spritePlatform_);
 
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
@@ -87,7 +88,7 @@ void GameScene::Update() {
 
 }
 
-void GameScene::Draw(PrimitiveDrawer* primitiveDrawer, SpritePlatform* spritePlatform) {
+void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 
 	primitiveDrawer->SetPipelineSet(dxCommon_->GetCommandList(), static_cast<BlendMode>(blendMode));
 
@@ -103,7 +104,7 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer, SpritePlatform* spritePla
 	//model_->Draw(commandList);
 
 	//Spriteの描画準備。Spriteの描画に共通のグラフィックスコマンドを積む
-	spritePlatform->PreDraw();
+	spritePlatform_->PreDraw();
 
 	//Spriteの描画。変更が必要なものだけ変更する
 	sprite_->Draw(dxCommon_->GetCommandList(), textureManager_);
