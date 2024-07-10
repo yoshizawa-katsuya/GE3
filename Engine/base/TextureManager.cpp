@@ -64,9 +64,6 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 
 void TextureManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle) {
 
-	
-
-
 	// シェーダリソースビューをセット
 	commandList->SetGraphicsRootDescriptorTable(rootParamIndex, textures_[textureHandle].gpuDescHandleSRV);
 

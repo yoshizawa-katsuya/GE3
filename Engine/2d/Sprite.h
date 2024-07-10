@@ -12,25 +12,44 @@ class Sprite
 public:
 
 	//初期化
-	void Initialize(uint32_t textureHandle, Vector2 position, Vector2 size, Vector4 color, SpritePlatform* spritePlatform);
+	void Initialize(uint32_t textureHandle, Vector2 size, SpritePlatform* spritePlatform);
 
 	//描画
-	void Draw(ID3D12GraphicsCommandList* commandList, TextureManager* textureManager);
+	void Draw(TextureManager* textureManager);
 
-	
+	const Vector2& GetSize() const { return size_; }
+	Vector2& GetSize() { return size_; }
+
+	Vector2& GetPosition() { return position_; }
+	const Vector2& GetPosition() const { return position_; }
+
+	float& GetRotation() { return rotation_; }
+	float GetRotation() const { return rotation_; }
+
+	Vector4& GetColor() { return materialData_->color; }
+	const Vector4& GetColor() const { return materialData_->color; }
+
 	Transforms GetTransform() { return transform_; }
 	Transforms GetUVTransform() { return uvTransform_; }
 
 	Transforms& GetTransformAddress() { return transform_; }
 	Transforms& GetUVTransformAddress() { return uvTransform_; }
 
+	void SetSize(const Vector2& size) { size_ = size; }
+
+	void SetPosition(const Vector2& position) { position_ = position; }
+
+	void SetRotation(float rotation) { rotation_ = rotation; }
+
+	void SetColor(const Vector4& color) { materialData_->color = color; }
+
 private:
 
 	//頂点データ作成
-	void CreateVertexData(Vector2 position, Vector2 size);
+	void CreateVertexData();
 
 	//マテリアルデータ作成
-	void CreateMaterialData(Vector4 color);
+	void CreateMaterialData();
 
 	//座標行列変換データ作成
 	void CreateTransformData();
@@ -71,6 +90,10 @@ private:
 	};
 
 	uint32_t textureHandle_ = 1;
+
+	Vector2 size_ = { 1.0f, 1.0f };
+	Vector2 position_ = { 0.0f, 0.0f };
+	float rotation_ = 0.0f;
 
 };
 

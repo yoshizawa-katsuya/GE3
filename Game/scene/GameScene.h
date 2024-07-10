@@ -46,7 +46,7 @@ private:
 
 	std::unique_ptr<Model> model_;
 
-	std::unique_ptr<Sprite> sprite_;
+	std::vector<std::unique_ptr<Sprite>> sprites_;
 
 	//プレイヤー
 	std::unique_ptr<Player> player_;

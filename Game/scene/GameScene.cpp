@@ -34,8 +34,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManag
 	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, textureManager_,  WinApp::kClientWidth, WinApp::kClientHeight);
 	model_->CreateFromOBJ("./resources", "plane.obj");
 
-	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(textureHandle1, Vector2{ 320.0f, 180.0f }, Vector2{ 640.0f, 360.0f }, Vector4{ 1.0f, 1.0f, 1.0f, 1.0f }, spritePlatform_);
+	for (uint32_t i = 0; i < 5; ++i) {
+		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
+		sprite->Initialize(textureHandle1, Vector2{ 100.0f, 100.0f }, spritePlatform_);
+		Vector2 position = { 50.0f + 200.0f * i, 100.0f };
+		sprite->SetPosition(position);
+		sprites_.push_back(std::move(sprite));
+	}
+	
+	
+	
 
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
@@ -48,12 +56,15 @@ void GameScene::Update() {
 	//プレイヤーの更新
 	player_->Update();
 
+	
+
 	ImGui::Begin("Window");
-	ImGui::DragFloat3("tranlateSprite", &sprite_->GetTransformAddress().translate.x, 0.01f);
-	if (ImGui::TreeNode("camera")) {
-		ImGui::DragFloat3("translate", &cameratransform.translate.x, 0.01f);
-		ImGui::DragFloat3("rotate", &cameratransform.rotate.x, 0.01f);
-		ImGui::DragFloat3("scale", &cameratransform.scale.x, 0.01f);
+	/*
+	if (ImGui::TreeNode("Sprite")) {
+		ImGui::DragFloat2("tranlate", &sprite_->GetPosition().x, 0.01f);
+		ImGui::DragFloat2("size", &sprite_->GetSize().x, 0.01f);
+		ImGui::SliderAngle("rotate", &sprite_->GetRotation());
+		ImGui::ColorEdit4("color", &sprite_->GetColor().x);
 
 		ImGui::TreePop();
 	}
@@ -62,6 +73,14 @@ void GameScene::Update() {
 		ImGui::DragFloat2("UVTranslate", &sprite_->GetUVTransformAddress().translate.x, 0.01f, -10.0f, 10.0f);
 		ImGui::DragFloat2("UVScale", &sprite_->GetUVTransformAddress().scale.x, 0.01f, -10.0f, 10.0f);
 		ImGui::SliderAngle("UVRotate", &sprite_->GetUVTransformAddress().rotate.z);
+
+		ImGui::TreePop();
+	}
+	*/
+	if (ImGui::TreeNode("camera")) {
+		ImGui::DragFloat3("translate", &cameratransform.translate.x, 0.01f);
+		ImGui::DragFloat3("rotate", &cameratransform.rotate.x, 0.01f);
+		ImGui::DragFloat3("scale", &cameratransform.scale.x, 0.01f);
 
 		ImGui::TreePop();
 	}
@@ -107,6 +126,9 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 	spritePlatform_->PreDraw();
 
 	//Spriteの描画。変更が必要なものだけ変更する
-	sprite_->Draw(dxCommon_->GetCommandList(), textureManager_);
+	for (const std::unique_ptr<Sprite>& sprite : sprites_) {
+		sprite->Draw(textureManager_);
+	}
+	//sprite_->Draw(textureManager_);
 
 }

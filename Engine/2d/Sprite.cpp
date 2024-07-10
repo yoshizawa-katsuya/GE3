@@ -3,22 +3,26 @@
 #include <cassert>
 #include "SpritePlatform.h"
 
-void Sprite::Initialize(uint32_t textureHandle, Vector2 position, Vector2 size, Vector4 color,SpritePlatform* spritePlatform) {
+void Sprite::Initialize(uint32_t textureHandle, Vector2 size, SpritePlatform* spritePlatform) {
 
 	//引数を受け取ってメンバ変数に記録する
 	spritePlatform_ = spritePlatform;
 	textureHandle_ = textureHandle;
-	
+	size_ = size;
 
-	CreateVertexData(position, size);
+	CreateVertexData();
 
-	CreateMaterialData(color);
+	CreateMaterialData();
 
 	CreateTransformData();
 
 }
 
-void Sprite::Draw(ID3D12GraphicsCommandList* commandList, TextureManager* textureManager) {
+void Sprite::Draw(TextureManager* textureManager) {
+
+	transform_.scale = { size_.x, size_.y, 1.0f };
+	transform_.translate = { position_.x, position_.y, 0.0f };
+	transform_.rotate = { 0.0f, 0.0f, rotation_ };
 
 	//Sprite用のWorldViewProjectionMatrixを作る
 	Matrix4x4 worldMatrixSprite = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
@@ -36,23 +40,23 @@ void Sprite::Draw(ID3D12GraphicsCommandList* commandList, TextureManager* textur
 
 	//Spriteの描画。変更が必要なものだけ変更する
 	//マテリアルのCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
-	commandList->IASetIndexBuffer(&indexBufferView_);	//IBVを設定
+	spritePlatform_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	spritePlatform_->GetDxCommon()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
+	spritePlatform_->GetDxCommon()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);	//IBVを設定
 	//TransformationMatrixCBufferの場所を設定
-	commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+	spritePlatform_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 	//SRVの設定
-	textureManager->SetGraphicsRootDescriptorTable(commandList, 2, textureHandle_);
+	textureManager->SetGraphicsRootDescriptorTable(spritePlatform_->GetDxCommon()->GetCommandList(), 2, textureHandle_);
 	//dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 	//描画
-	commandList->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	spritePlatform_->GetDxCommon()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 	//commandList_->DrawInstanced(6, 1, 0, 0);
 
 }
 
 
 
-void Sprite::CreateVertexData(Vector2 position, Vector2 size)
+void Sprite::CreateVertexData()
 {
 
 	vertexResource_ = spritePlatform_->GetDxCommon()->CreateBufferResource(sizeof(VertexData) * 4);
@@ -67,16 +71,16 @@ void Sprite::CreateVertexData(Vector2 position, Vector2 size)
 
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	//四角形
-	vertexData_[0].position = { position.x - (size.x / 2.0f), position.y + (size.y / 2.0f), 0.0f, 1.0f };//左下
+	vertexData_[0].position = { -(1.0f / 2.0f), (1.0f / 2.0f), 0.0f, 1.0f };//左下
 	vertexData_[0].texcoord = { 0.0f, 1.0f };
 	vertexData_[0].normal = { 0.0f, 0.0f, -1.0f };
-	vertexData_[1].position = { position.x - (size.x / 2.0f), position.y - (size.y / 2.0f), 0.0f, 1.0f };//左上
+	vertexData_[1].position = { -(1.0f / 2.0f),-(1.0f / 2.0f), 0.0f, 1.0f };//左上
 	vertexData_[1].texcoord = { 0.0f, 0.0f };
 	vertexData_[1].normal = { 0.0f, 0.0f, -1.0f };
-	vertexData_[2].position = { position.x + (size.x / 2.0f), position.y + (size.y / 2.0f), 0.0f, 1.0f };//右下
+	vertexData_[2].position = { (1.0f / 2.0f), (1.0f / 2.0f), 0.0f, 1.0f };//右下
 	vertexData_[2].texcoord = { 1.0f, 1.0f };
 	vertexData_[2].normal = { 0.0f, 0.0f, -1.0f };
-	vertexData_[3].position = { position.x + (size.x / 2.0f), position.y - (size.y / 2.0f), 0.0f, 1.0f };//右上
+	vertexData_[3].position = { (1.0f / 2.0f), -(1.0f / 2.0f), 0.0f, 1.0f };//右上
 	vertexData_[3].texcoord = { 1.0f, 0.0f };
 	vertexData_[3].normal = { 0.0f, 0.0f, -1.0f };
 
@@ -98,7 +102,7 @@ void Sprite::CreateVertexData(Vector2 position, Vector2 size)
 
 }
 
-void Sprite::CreateMaterialData(Vector4 color)
+void Sprite::CreateMaterialData()
 {
 
 	//Sprite用のマテリアルリソースを作る
@@ -107,7 +111,7 @@ void Sprite::CreateMaterialData(Vector4 color)
 	//書き込むためのアドレスを取得
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	//白を書き込む
-	materialData_->color = color;
+	materialData_->color = {1.0f, 1.0f, 1.0f, 1.0f};
 	materialData_->enableLighting = false;
 	materialData_->uvTransform = MakeIdentity4x4();
 
