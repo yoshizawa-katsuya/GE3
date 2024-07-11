@@ -1,6 +1,7 @@
 #include "TextureManager.h"
 #include <dxcapi.h>
 #include <cassert>
+#include "dx12.h"
 
 TextureManager* TextureManager::instance_ = nullptr;
 
@@ -79,6 +80,17 @@ void TextureManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* c
 
 }
 
+const DirectX::TexMetadata& TextureManager::GetMetaData(uint32_t textureHandle)
+{
+	
+	//範囲外指定違反チェック
+	assert(textureHandle > 0 && textureHandle <= DirectXCommon::kMaxSrvDescriptors_);
+
+	Texture& texture = textures_[textureHandle];
+	return texture.metadata;
+
+}
+
 
 //DiscriptorHeap作成の関数
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> TextureManager::CreateDescriptorHeap(
@@ -103,7 +115,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 
 	//テクスチャファイルを読み込んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
-	std::wstring filePathW = ConvertString(filePath);
+	std::wstring filePathW = StringUtility::ConvertString(filePath);
 	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
 	assert(SUCCEEDED(hr));
 
@@ -150,36 +162,4 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 		assert(SUCCEEDED(hr));
 	}
 
-}
-
-
-
-
-
-std::wstring TextureManager::ConvertString(const std::string& str) {
-	if (str.empty()) {
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0) {
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-	return result;
-}
-
-std::string TextureManager::ConvertString(const std::wstring& str) {
-	if (str.empty()) {
-		return std::string();
-	}
-
-	auto sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), NULL, 0, NULL, NULL);
-	if (sizeNeeded == 0) {
-		return std::string();
-	}
-	std::string result(sizeNeeded, 0);
-	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
-	return result;
 }

@@ -12,7 +12,7 @@ class Sprite
 public:
 
 	//初期化
-	void Initialize(uint32_t textureHandle, Vector2 size, SpritePlatform* spritePlatform);
+	void Initialize(uint32_t textureHandle, SpritePlatform* spritePlatform);
 
 	//描画
 	void Draw();
@@ -29,6 +29,21 @@ public:
 	Vector4& GetColor() { return materialData_->color; }
 	const Vector4& GetColor() const { return materialData_->color; }
 
+	Vector2& GetAnchorPoint() { return anchorPoint_; }
+	const Vector2& GetAnchorPoint() const { return anchorPoint_; }
+
+	bool& GetIsFlipX() { return isFlipX_; }
+	bool GetIsFlipX() const { return isFlipX_; }
+
+	bool& GetIsFlipY() { return isFlipY_; }
+	bool GetIsFlipY() const { return isFlipY_; }
+
+	Vector2& GetTextureLeftTop() { return textureLeftTop_; }
+	const Vector2& GetTextureLeftTop() const { return textureLeftTop_; }
+
+	Vector2& GetTextureSize() { return textureSize_; }
+	const Vector2& GetTextureSize() const { return textureSize_; }
+
 	Transforms GetTransform() { return transform_; }
 	Transforms GetUVTransform() { return uvTransform_; }
 
@@ -43,6 +58,16 @@ public:
 
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 
+	void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; }
+
+	void SetIsFlipX(bool IsFlipX) { isFlipX_ = IsFlipX; }
+
+	void SetIsFlipY(bool IsFlipY) { isFlipY_ = IsFlipY; }
+
+	void SetTextureLeftTop(const Vector2& textureLeftTop) { textureLeftTop_ = textureLeftTop; }
+
+	void SetTextureSize(const Vector2& textureSize) { textureSize_ = textureSize; }
+
 	void SetTexture(uint32_t textureHandle) { textureHandle_ = textureHandle; }
 
 private:
@@ -56,7 +81,8 @@ private:
 	//座標行列変換データ作成
 	void CreateTransformData();
 
-	
+	//テクスチャサイズをイメージに合わせる
+	void AdjustTextureSize();
 
 	SpritePlatform* spritePlatform_ = nullptr;
 
@@ -96,6 +122,17 @@ private:
 	Vector2 size_ = { 1.0f, 1.0f };
 	Vector2 position_ = { 0.0f, 0.0f };
 	float rotation_ = 0.0f;
+	Vector2 anchorPoint_ = { 0.0f, 0.0f };
+
+	//左右フリップ
+	bool isFlipX_ = false;
+	//上下フリップ
+	bool isFlipY_ = false;
+
+	//テクスチャ左上座標
+	Vector2 textureLeftTop_ = { 0.0f, 0.0f };
+	//テクスチャ切り出しサイズ
+	Vector2 textureSize_ = { 100.0f, 100.0f };
 
 };
 

@@ -30,6 +30,8 @@ public:
 	// デスクリプタテーブルをセット
 	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle);
 
+	//メタデータを取得
+	const DirectX::TexMetadata& GetMetaData(uint32_t textureHandle);
 
 	//DiscriptorHeap作成の関数
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
@@ -38,9 +40,6 @@ public:
 	//Textureデータを読む
 	void LoadTexture(const std::string& filePath);
 	
-	std::wstring ConvertString(const std::string& str);
-
-	std::string ConvertString(const std::wstring& str);
 
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap() const { return srvDescriptorHeap_.Get(); }
 

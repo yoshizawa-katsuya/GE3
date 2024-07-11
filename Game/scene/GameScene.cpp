@@ -34,7 +34,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 
 	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, WinApp::kClientWidth, WinApp::kClientHeight);
 	model_->CreateFromOBJ("./resources", "plane.obj");
-
+	
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->Initialize(textureHandle_[0], spritePlatform_);
+	
+	/*
 	for (uint32_t i = 0; i < 5; ++i) {
 		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
 		if (i < 2) {
@@ -47,7 +51,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 		sprite->SetPosition(position);
 		sprites_.push_back(std::move(sprite));
 	}
-	
+	*/
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(model_.get());
@@ -62,12 +66,17 @@ void GameScene::Update() {
 	
 
 	ImGui::Begin("Window");
-	/*
+	
 	if (ImGui::TreeNode("Sprite")) {
 		ImGui::DragFloat2("tranlate", &sprite_->GetPosition().x, 0.01f);
 		ImGui::DragFloat2("size", &sprite_->GetSize().x, 0.01f);
 		ImGui::SliderAngle("rotate", &sprite_->GetRotation());
 		ImGui::ColorEdit4("color", &sprite_->GetColor().x);
+		ImGui::DragFloat2("anchprPoint", &sprite_->GetAnchorPoint().x, 0.01f);
+		ImGui::Checkbox("IsFlipX", &sprite_->GetIsFlipX());
+		ImGui::Checkbox("IsFlipY", &sprite_->GetIsFlipY());
+		ImGui::DragFloat2("textureLeftTop", &sprite_->GetTextureLeftTop().x, 0.01f);
+		ImGui::DragFloat2("textureSize", &sprite_->GetTextureSize().x, 0.01f);
 
 		ImGui::TreePop();
 	}
@@ -79,7 +88,7 @@ void GameScene::Update() {
 
 		ImGui::TreePop();
 	}
-	*/
+	
 	if (ImGui::TreeNode("camera")) {
 		ImGui::DragFloat3("translate", &cameratransform.translate.x, 0.01f);
 		ImGui::DragFloat3("rotate", &cameratransform.rotate.x, 0.01f);
@@ -129,9 +138,12 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 	spritePlatform_->PreDraw();
 
 	//Spriteの描画。変更が必要なものだけ変更する
+
+	/*
 	for (const std::unique_ptr<Sprite>& sprite : sprites_) {
 		sprite->Draw();
 	}
-	//sprite_->Draw(textureManager_);
+	*/
+	sprite_->Draw();
 
 }

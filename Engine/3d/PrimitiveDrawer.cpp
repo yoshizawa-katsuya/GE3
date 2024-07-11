@@ -17,6 +17,9 @@ void PrimitiveDrawer::Initialize(DirectXCommon* dxCommon) {
 
 	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeScreen)) = CreateGraphicsPipeline(BlendMode::kBlendModeScreen, dxCommon);
 
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeNoneSprite)) = CreateGraphicsPipeline(BlendMode::kBlendModeNoneSprite, dxCommon);
+
+
 }
 
 std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPipeline(BlendMode blendMode, DirectXCommon* dxCommon) {
@@ -158,8 +161,18 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 	
 	//ResiterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
-	//裏面（時計回り）を表示しない
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	switch (blendMode) {
+	case BlendMode::kBlendModeNoneSprite:
+		//裏面（時計回り）を表示する
+		rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
+		break;
+
+	default:
+		//裏面（時計回り）を表示しない
+		rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+		break;
+	}
+	
 	//三角形の中を塗りつぶす
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 

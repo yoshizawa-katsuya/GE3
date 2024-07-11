@@ -3,12 +3,11 @@
 #include <cassert>
 #include "SpritePlatform.h"
 
-void Sprite::Initialize(uint32_t textureHandle, Vector2 size, SpritePlatform* spritePlatform) {
+void Sprite::Initialize(uint32_t textureHandle,  SpritePlatform* spritePlatform) {
 
 	//引数を受け取ってメンバ変数に記録する
 	spritePlatform_ = spritePlatform;
 	textureHandle_ = textureHandle;
-	size_ = size;
 
 	CreateVertexData();
 
@@ -16,9 +15,46 @@ void Sprite::Initialize(uint32_t textureHandle, Vector2 size, SpritePlatform* sp
 
 	CreateTransformData();
 
+	AdjustTextureSize();
+
 }
 
 void Sprite::Draw() {
+
+	float left = 0.0f - anchorPoint_.x;
+	float right = 1.0f - anchorPoint_.x;
+	float top = 0.0f - anchorPoint_.y;
+	float bottom = 1.0f - anchorPoint_.y;
+
+	//左右反転
+	if (isFlipX_) {
+		left = -left;
+		right = -right;
+
+	}
+	//上下反転
+	if (isFlipY_) {
+		top = -top;
+		bottom = -bottom;
+
+	}
+
+	vertexData_[0].position = { left, bottom, 0.0f, 1.0f };//左下
+	vertexData_[1].position = { left, top, 0.0f, 1.0f };//左上
+	vertexData_[2].position = { right, bottom, 0.0f, 1.0f };//右下
+	vertexData_[3].position = { right, top, 0.0f, 1.0f };//右上
+	
+	const DirectX::TexMetadata& metaData = TextureManager::GetInstance()->GetMetaData(textureHandle_);
+	float tex_left = textureLeftTop_.x / metaData.width;
+	float tex_right = (textureLeftTop_.x + textureSize_.x) / metaData.width;
+	float tex_top = textureLeftTop_.y / metaData.height;
+	float tex_bottom = (textureLeftTop_.y + textureSize_.y) / metaData.height;
+
+	//頂点リソースにデータを書き込む
+	vertexData_[0].texcoord = { tex_left, tex_bottom };
+	vertexData_[1].texcoord = { tex_left, tex_top };
+	vertexData_[2].texcoord = { tex_right, tex_bottom };
+	vertexData_[3].texcoord = { tex_right, tex_top };
 
 	transform_.scale = { size_.x, size_.y, 1.0f };
 	transform_.translate = { position_.x, position_.y, 0.0f };
@@ -129,4 +165,15 @@ void Sprite::CreateTransformData()
 	transformationMatrixData_->WVP = MakeIdentity4x4();
 	transformationMatrixData_->World = MakeIdentity4x4();
 
+}
+
+void Sprite::AdjustTextureSize()
+{
+
+	const DirectX::TexMetadata& metaData = TextureManager::GetInstance()->GetMetaData(textureHandle_);
+
+	textureSize_.x = static_cast<float>(metaData.width);
+	textureSize_.y = static_cast<float>(metaData.height);
+	//画像サイズをテクスチャサイズに合わせる
+	size_ = textureSize_;
 }
