@@ -15,7 +15,7 @@ public:
 
 	~GameScene();
 
-	void Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, SpritePlatform* spritePlatform);
+	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform);
 
 	void Update();
 
@@ -28,8 +28,6 @@ private:
 	//デバイス
 	DirectXCommon* dxCommon_;
 
-	TextureManager* textureManager_;
-
 	SpritePlatform* spritePlatform_;
 
 	int blendMode = static_cast<int>(BlendMode::kBlendModeNone);
@@ -37,7 +35,7 @@ private:
 	//カメラの変数
 	Transforms cameratransform;
 
-	uint32_t textureHandle1;
+	uint32_t textureHandle_[2];
 
 	//平行光源用のResourceを作成
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_;

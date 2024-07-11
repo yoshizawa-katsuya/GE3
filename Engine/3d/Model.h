@@ -9,7 +9,7 @@ class Model
 {
 public:
 
-	Model(ID3D12Device* device, Transforms* camera, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight);
+	Model(ID3D12Device* device, Transforms* camera, const int32_t kClientWidth, const int32_t kClientHeight);
 
 	void CreateFromOBJ(const std::string& directoryPath, const std::string& filename);
 
@@ -61,7 +61,6 @@ private:
 	//カメラの変数
 	Transforms* cameratransform_;
 
-	TextureManager* textureManager_;
 	uint32_t textureHandle_;
 
 };

@@ -11,6 +11,12 @@ class TextureManager
 {
 public:
 
+	//シングルトンインスタンスの取得
+	static TextureManager* GetInstance();
+
+	//終了
+	void Finalize();
+
 	//初期化
 	void Initialize(DirectXCommon* dxCommon);
 
@@ -30,13 +36,7 @@ public:
 		Microsoft::WRL::ComPtr<ID3D12Device> device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisiblr);
 
 	//Textureデータを読む
-	DirectX::ScratchImage LoadTexture(const std::string& filePath);
-
-	
-	//TextureResourceにデータを転送する
-	void UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages);
-
-	
+	void LoadTexture(const std::string& filePath);
 	
 	std::wstring ConvertString(const std::string& str);
 
@@ -44,19 +44,15 @@ public:
 
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap() const { return srvDescriptorHeap_.Get(); }
 
-	/// <summary>
-	/// テクスチャ
-	/// </summary>
-	struct Texture {
-		// テクスチャリソース
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-		// シェーダリソースビューのハンドル(CPU)
-		D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-		// シェーダリソースビューのハンドル(CPU)
-		D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
-	};
 
 private:
+
+	static TextureManager* instance_;
+
+	TextureManager() = default;
+	~TextureManager() = default;
+	TextureManager(TextureManager&) = default;
+	TextureManager& operator=(TextureManager&) = default;
 
 	DirectXCommon* dxCommon_;
 
@@ -72,7 +68,22 @@ private:
 	// デスクリプターの数
 	UINT kNumDescriptors_;
 
+
+	/// <summary>
+	/// テクスチャ
+	/// </summary>
+	struct Texture {
+		std::string filePath;
+		DirectX::TexMetadata metadata;
+		// テクスチャリソース
+		Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+		// シェーダリソースビューのハンドル(CPU)
+		D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+		// シェーダリソースビューのハンドル(CPU)
+		D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	};
+
 	// テクスチャコンテナ
-	std::array<Texture, 128> textures_;
+	std::array<Texture, DirectXCommon::kMaxSrvDescriptors_> textures_;
 
 };

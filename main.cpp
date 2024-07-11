@@ -35,8 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	input->Initialize(winApp);
 
 	//TextureManager初期化
-	TextureManager* textureManager = new TextureManager;
-	textureManager->Initialize(dxCommon);
+	TextureManager::GetInstance()->Initialize(dxCommon);
 
 	//PSOの設定
 	PrimitiveDrawer* primitiveDrawer = new PrimitiveDrawer;
@@ -48,7 +47,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene;
-	gameScene->Initialize(dxCommon, textureManager, spritePlatform);
+	gameScene->Initialize(dxCommon, spritePlatform);
 
 	
 	
@@ -136,8 +135,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete primitiveDrawer;
 	primitiveDrawer = nullptr;
 
-	delete textureManager;
-	textureManager = nullptr;
+	TextureManager::GetInstance()->Finalize();
 
 	//入力開放
 	delete input;

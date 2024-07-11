@@ -2,6 +2,22 @@
 #include <dxcapi.h>
 #include <cassert>
 
+TextureManager* TextureManager::instance_ = nullptr;
+
+TextureManager* TextureManager::GetInstance()
+{
+	if (instance_ == nullptr) {
+		instance_ = new TextureManager;
+	}
+	return instance_;
+}
+
+void TextureManager::Finalize()
+{
+	delete instance_;
+	instance_ = nullptr;
+}
+
 void TextureManager::Initialize(DirectXCommon* dxCommon) {
 
 	assert(dxCommon);
@@ -32,32 +48,26 @@ void TextureManager::ResetAll() {
 
 uint32_t TextureManager::Load(const std::string& fileName) {
 
-	//Textureを読んで転送する
-	DirectX::ScratchImage mipImages = LoadTexture(fileName);
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	Microsoft::WRL::ComPtr<ID3D12Resource> textureResource = dxCommon_->CreateTextureResource(metadata);
-	UploadTextureData(textureResource, mipImages);
+	//読み込み済みテクスチャを検索
+	auto it = std::find_if(
+		textures_.begin(),
+		textures_.end(),
+		[&](Texture& texture) {return texture.filePath == fileName; }
+	);
+	if (it != textures_.end()) {
+		uint32_t textureIndex = static_cast<uint32_t>(std::distance(textures_.begin(), it));
+		return textureIndex;
+	}
 
-	//metadataを基にSRVの設定
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = metadata.format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
-
-	//SRVを作成するDescriptorHeapの場所を決める。先頭はImGuiが使っているのでその次を使う
-	index_++;
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = dxCommon_->GetSRVCPUDescriptorHandle(index_);
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = dxCommon_->GetSRVGPUDescriptorHandle(index_);
 	
 
-	//SRVの生成
-	device_->CreateShaderResourceView(textureResource.Get(), &srvDesc, textureSrvHandleCPU);
+	index_++;
+	
+	//テクスチャ枚数上限チェック
+	assert(index_ <= DirectXCommon::kMaxSrvDescriptors_);
 
-	Texture& texture = textures_.at(index_);
-	texture.resource = textureResource;
-	texture.cpuDescHandleSRV = textureSrvHandleCPU;
-	texture.gpuDescHandleSRV = textureSrvHandleGPU;
+	//Textureを読んで転送する
+	LoadTexture(fileName);
 
 	return index_;
 }
@@ -87,7 +97,9 @@ Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> TextureManager::CreateDescriptorHea
 
 }
 
-DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath) {
+void TextureManager::LoadTexture(const std::string& filePath) {
+
+	
 
 	//テクスチャファイルを読み込んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
@@ -101,14 +113,25 @@ DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath) {
 	assert(SUCCEEDED(hr));
 
 	//ミップマップ付きのデータを返す
-	return mipImages;
+	textures_.at(index_).filePath = filePath;
+	textures_.at(index_).metadata = mipImages.GetMetadata();
+	textures_.at(index_).resource = dxCommon_->CreateTextureResource(textures_.at(index_).metadata);
 
-}
 
+	//metadataを基にSRVの設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = textures_.at(index_).metadata.format;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;	//2Dテクスチャ
+	srvDesc.Texture2D.MipLevels = UINT(textures_.at(index_).metadata.mipLevels);
 
+	//SRVを作成するDescriptorHeapの場所を決める。先頭はImGuiが使っているのでその次を使う
+	textures_.at(index_).cpuDescHandleSRV = dxCommon_->GetSRVCPUDescriptorHandle(index_);
+	textures_.at(index_).gpuDescHandleSRV = dxCommon_->GetSRVGPUDescriptorHandle(index_);
 
-void TextureManager::UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> texture, const DirectX::ScratchImage& mipImages)
-{
+	//SRVの生成
+	device_->CreateShaderResourceView(textures_.at(index_).resource.Get(), &srvDesc, textures_.at(index_).cpuDescHandleSRV);
+
 
 	//Meta情報を取得
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
@@ -117,7 +140,7 @@ void TextureManager::UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> te
 		//MipMapLevelを指定して各Imageを取得
 		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
 		//Textureに転送
-		HRESULT hr = texture->WriteToSubresource(
+		HRESULT hr = textures_.at(index_).resource->WriteToSubresource(
 			UINT(mipLevel),
 			nullptr,				//全領域へコピー
 			img->pixels,			//元データアドレス
@@ -127,8 +150,11 @@ void TextureManager::UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> te
 		assert(SUCCEEDED(hr));
 	}
 
-
 }
+
+
+
+
 
 std::wstring TextureManager::ConvertString(const std::string& str) {
 	if (str.empty()) {

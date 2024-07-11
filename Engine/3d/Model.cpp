@@ -4,11 +4,10 @@
 #include <sstream>
 #include <cassert>
 
-Model::Model(ID3D12Device* device, Transforms* camera, TextureManager* textureManager, const int32_t kClientWidth, const int32_t kClientHeight) {
+Model::Model(ID3D12Device* device, Transforms* camera, const int32_t kClientWidth, const int32_t kClientHeight) {
 
 	device_ = device;
 	cameratransform_ = camera;
-	textureManager_ = textureManager;
 	kClientWidth_ = kClientWidth;
 	kClientHeight_ = kClientHeight;
 
@@ -54,7 +53,7 @@ void Model::CreateFromOBJ(const std::string& directoryPath, const std::string& f
 	//単位行列を書き込んでおく
 	transformationMatrixData_->WVP = MakeIdentity4x4();
 
-	textureHandle_ = textureManager_->Load(modelData_.material.textureFilePath);
+	textureHandle_ = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
 
 }
 
@@ -75,7 +74,7 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
 	//wvp用のCBufferの場所を設定
 	commandList->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	textureManager_->SetGraphicsRootDescriptorTable(commandList, 2, textureHandle_);
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(commandList, 2, textureHandle_);
 
 	//描画1(DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
 		//commandList_->DrawIndexedInstanced((kSubdivision * kSubdivision * 6), 1, 0, 0, 0);

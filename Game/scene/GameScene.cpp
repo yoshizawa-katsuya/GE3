@@ -10,10 +10,9 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManager, SpritePlatform* spritePlatform) {
+void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform) {
 
 	dxCommon_ = dxCommon;
-	textureManager_ = textureManager;
 	spritePlatform_ = spritePlatform;
 
 	//平行光源用のResourceを作成
@@ -29,22 +28,26 @@ void GameScene::Initialize(DirectXCommon* dxCommon, TextureManager* textureManag
 
 	cameratransform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -10.0f} };
 
-	textureHandle1 = textureManager_->Load("resources/uvChecker.png");
+	
+	textureHandle_[0] = TextureManager::GetInstance()->Load("resources/uvChecker.png");
+	textureHandle_[1] = TextureManager::GetInstance()->Load("resources/monsterBall.png");
 
-	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, textureManager_,  WinApp::kClientWidth, WinApp::kClientHeight);
+	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, WinApp::kClientWidth, WinApp::kClientHeight);
 	model_->CreateFromOBJ("./resources", "plane.obj");
 
 	for (uint32_t i = 0; i < 5; ++i) {
 		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
-		sprite->Initialize(textureHandle1, Vector2{ 100.0f, 100.0f }, spritePlatform_);
+		if (i < 2) {
+			sprite->Initialize(textureHandle_[i], Vector2{ 100.0f, 100.0f }, spritePlatform_);
+		}
+		else {
+			sprite->Initialize(textureHandle_[i % 2], Vector2{ 100.0f, 100.0f }, spritePlatform_);
+		}
 		Vector2 position = { 50.0f + 200.0f * i, 100.0f };
 		sprite->SetPosition(position);
 		sprites_.push_back(std::move(sprite));
 	}
 	
-	
-	
-
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(model_.get());
@@ -127,7 +130,7 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 
 	//Spriteの描画。変更が必要なものだけ変更する
 	for (const std::unique_ptr<Sprite>& sprite : sprites_) {
-		sprite->Draw(textureManager_);
+		sprite->Draw();
 	}
 	//sprite_->Draw(textureManager_);
 

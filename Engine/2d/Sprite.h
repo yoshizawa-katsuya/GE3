@@ -15,7 +15,7 @@ public:
 	void Initialize(uint32_t textureHandle, Vector2 size, SpritePlatform* spritePlatform);
 
 	//描画
-	void Draw(TextureManager* textureManager);
+	void Draw();
 
 	const Vector2& GetSize() const { return size_; }
 	Vector2& GetSize() { return size_; }
@@ -42,6 +42,8 @@ public:
 	void SetRotation(float rotation) { rotation_ = rotation; }
 
 	void SetColor(const Vector4& color) { materialData_->color = color; }
+
+	void SetTexture(uint32_t textureHandle) { textureHandle_ = textureHandle; }
 
 private:
 

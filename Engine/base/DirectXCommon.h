@@ -49,7 +49,7 @@ public:
 
 	uint32_t GetDescriptorSizeSRV() const { return descriptorSizeSRV_; }
 
-	UINT GetkNumSrvDescriptors_() const { return kNumSrvDescriptors_; }
+	UINT GetkNumSrvDescriptors_() const { return kMaxSrvDescriptors_; }
 
 	IDxcUtils* GetDxcUtils() const { return dxcUtils_.Get(); }
 
@@ -86,6 +86,9 @@ public:
 	/// DSVの指定番号のGPUデスクリプタハンドルを取得
 	/// </summary>
 	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
+
+	// デスクリプターの数
+	static const UINT kMaxSrvDescriptors_ = 512;
 
 private:
 
@@ -161,8 +164,6 @@ private:
 	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_ = nullptr;
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_ = nullptr;
 
-	// デスクリプターの数
-	const UINT kNumSrvDescriptors_ = 128;
 
 	uint32_t descriptorSizeRTV_;
 	uint32_t descriptorSizeSRV_;

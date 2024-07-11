@@ -18,7 +18,7 @@ void Sprite::Initialize(uint32_t textureHandle, Vector2 size, SpritePlatform* sp
 
 }
 
-void Sprite::Draw(TextureManager* textureManager) {
+void Sprite::Draw() {
 
 	transform_.scale = { size_.x, size_.y, 1.0f };
 	transform_.translate = { position_.x, position_.y, 0.0f };
@@ -46,7 +46,7 @@ void Sprite::Draw(TextureManager* textureManager) {
 	//TransformationMatrixCBufferの場所を設定
 	spritePlatform_->GetDxCommon()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 	//SRVの設定
-	textureManager->SetGraphicsRootDescriptorTable(spritePlatform_->GetDxCommon()->GetCommandList(), 2, textureHandle_);
+	TextureManager::GetInstance()->SetGraphicsRootDescriptorTable(spritePlatform_->GetDxCommon()->GetCommandList(), 2, textureHandle_);
 	//dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 	//描画
 	spritePlatform_->GetDxCommon()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
