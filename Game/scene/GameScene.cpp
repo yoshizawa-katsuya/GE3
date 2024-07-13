@@ -106,14 +106,14 @@ void GameScene::Update() {
 
 		ImGui::TreePop();
 	}
-
+	/*
 	ImGui::RadioButton("BlendModeNone", &blendMode, static_cast<int>(BlendMode::kBlendModeNone));
 	ImGui::RadioButton("BlendModeNormal", &blendMode, static_cast<int>(BlendMode::kBlendModeNormal));
 	ImGui::RadioButton("BlendModeAdd", &blendMode, static_cast<int>(BlendMode::kBlendModeAdd));
 	ImGui::RadioButton("BlendModeSubtract", &blendMode, static_cast<int>(BlendMode::kBlendModeSubtract));
 	ImGui::RadioButton("BlendModeMultiply", &blendMode, static_cast<int>(BlendMode::kBlendModeMultiply));
 	ImGui::RadioButton("BlendModeScreen", &blendMode, static_cast<int>(BlendMode::kBlendModeScreen));
-
+	*/
 	
 	//ImGui::Checkbox("useMonsterBall", &useMonaterBall);
 	ImGui::End();
@@ -122,13 +122,15 @@ void GameScene::Update() {
 
 void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 
-	primitiveDrawer->SetPipelineSet(dxCommon_->GetCommandList(), static_cast<BlendMode>(blendMode));
+	//primitiveDrawer->SetPipelineSet(dxCommon_->GetCommandList(), static_cast<BlendMode>(blendMode));
 
 
 	//dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonaterBall ? textureSrvHandleGPU2 : textureSrvHandleGPU);
 	//DirectionalRight
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
+	//Modelの描画前処理
+	modelPlatform_->PreDraw();
 	//プレイヤーの描画
 	player_->Draw(dxCommon_->GetCommandList());
 

@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//3Dオブジェクト共通部の初期化
 	ModelPlatform* modelPlatform = new ModelPlatform;
-	modelPlatform->Initialize();
+	modelPlatform->Initialize(dxCommon, primitiveDrawer);
 
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene;
