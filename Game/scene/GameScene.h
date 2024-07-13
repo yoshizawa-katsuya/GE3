@@ -4,6 +4,7 @@
 #include "Struct.h"
 #include "DirectXCommon.h"
 #include "TextureManager.h"
+#include "ModelPlatform.h"
 #include "SpritePlatform.h"
 #include "Model.h"
 #include "Sprite.h"
@@ -15,7 +16,7 @@ public:
 
 	~GameScene();
 
-	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform);
+	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform);
 
 	void Update();
 
@@ -29,6 +30,7 @@ private:
 	DirectXCommon* dxCommon_;
 
 	SpritePlatform* spritePlatform_;
+	ModelPlatform* modelPlatform_;
 
 	int blendMode = static_cast<int>(BlendMode::kBlendModeNone);
 

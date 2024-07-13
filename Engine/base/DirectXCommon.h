@@ -49,8 +49,6 @@ public:
 
 	uint32_t GetDescriptorSizeSRV() const { return descriptorSizeSRV_; }
 
-	UINT GetkNumSrvDescriptors_() const { return kMaxSrvDescriptors_; }
-
 	IDxcUtils* GetDxcUtils() const { return dxcUtils_.Get(); }
 
 	IDxcCompiler3* GetDxcCompiler() const { return dxcCompiler_.Get(); }

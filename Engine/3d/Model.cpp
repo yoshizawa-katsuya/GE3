@@ -13,6 +13,13 @@ Model::Model(ID3D12Device* device, Transforms* camera, const int32_t kClientWidt
 
 }
 
+void Model::Initialize()
+{
+
+
+
+}
+
 void Model::CreateFromOBJ(const std::string& directoryPath, const std::string& filename) {
 
 	//モデル読み込み

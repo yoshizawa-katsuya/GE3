@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "SpritePlatform.h"
 #include "Model.h"
+#include "ModelPlatform.h"
 #include "PrimitiveDrawer.h"
 #include "GameScene.h"
 #include "Input.h"
@@ -45,9 +46,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SpritePlatform* spritePlatform = new SpritePlatform;
 	spritePlatform->Initialize(dxCommon, primitiveDrawer);
 
+	//3Dオブジェクト共通部の初期化
+	ModelPlatform* modelPlatform = new ModelPlatform;
+	modelPlatform->Initialize();
+
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene;
-	gameScene->Initialize(dxCommon, spritePlatform);
+	gameScene->Initialize(dxCommon, spritePlatform, modelPlatform);
 
 	
 	
@@ -128,6 +133,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//解放処理
 	delete gameScene;
 	gameScene = nullptr;
+
+	delete modelPlatform;
+	modelPlatform = nullptr;
 
 	delete spritePlatform;
 	spritePlatform = nullptr;

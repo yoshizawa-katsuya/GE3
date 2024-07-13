@@ -10,10 +10,11 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform) {
+void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform) {
 
 	dxCommon_ = dxCommon;
 	spritePlatform_ = spritePlatform;
+	modelPlatform_ = modelPlatform;
 
 	//平行光源用のResourceを作成
 	directionalLightResource_ = dxCommon_->CreateBufferResource(sizeof(DirectionalLight));
@@ -144,6 +145,6 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 		sprite->Draw();
 	}
 	*/
-	sprite_->Draw();
+	//sprite_->Draw();
 
 }

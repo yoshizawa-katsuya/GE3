@@ -11,6 +11,8 @@ public:
 
 	Model(ID3D12Device* device, Transforms* camera, const int32_t kClientWidth, const int32_t kClientHeight);
 
+	void Initialize();
+
 	void CreateFromOBJ(const std::string& directoryPath, const std::string& filename);
 
 	void Draw(ID3D12GraphicsCommandList* commandList);

@@ -25,25 +25,12 @@ void TextureManager::Initialize(DirectXCommon* dxCommon) {
 
 	dxCommon_ = dxCommon;
 
-	device_ = dxCommon->GetDevice();
-
-	descriptorSizeSRV_ = dxCommon->GetDescriptorSizeSRV();
-
-	kNumDescriptors_ = dxCommon->GetkNumSrvDescriptors_();
-
+	
 	index_ = 0;
 
-	srvDescriptorHeap_ = dxCommon->GetSRVDescriptorHeap();
+	
 	//全テクスチャリセット
 	//ResetAll();
-
-}
-
-void TextureManager::ResetAll() {
-
-	//SRV用のヒープでディスクリプタの数は128。SRVはShader内で触るものなので、ShaderVisibleはtrue
-	srvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kNumDescriptors_, true);
-
 
 }
 
@@ -142,7 +129,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	textures_.at(index_).gpuDescHandleSRV = dxCommon_->GetSRVGPUDescriptorHandle(index_);
 
 	//SRVの生成
-	device_->CreateShaderResourceView(textures_.at(index_).resource.Get(), &srvDesc, textures_.at(index_).cpuDescHandleSRV);
+	dxCommon_->GetDevice()->CreateShaderResourceView(textures_.at(index_).resource.Get(), &srvDesc, textures_.at(index_).cpuDescHandleSRV);
 
 
 	//Meta情報を取得

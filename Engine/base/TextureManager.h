@@ -20,9 +20,7 @@ public:
 	//初期化
 	void Initialize(DirectXCommon* dxCommon);
 
-	//全テクスチャリセット
-	void ResetAll();
-
+	
 	//読み込み
 	uint32_t Load(const std::string& fileName);
 
@@ -41,8 +39,7 @@ public:
 	void LoadTexture(const std::string& filePath);
 	
 
-	ID3D12DescriptorHeap* GetSrvDescriptorHeap() const { return srvDescriptorHeap_.Get(); }
-
+	
 
 private:
 
@@ -55,18 +52,9 @@ private:
 
 	DirectXCommon* dxCommon_;
 
-	//デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device> device_;
-
-	uint32_t descriptorSizeSRV_;
-
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap_;
-
 	uint32_t index_;
 
-	// デスクリプターの数
-	UINT kNumDescriptors_;
-
+	
 
 	/// <summary>
 	/// テクスチャ
