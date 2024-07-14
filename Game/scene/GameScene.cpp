@@ -24,8 +24,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	cameratransform = { {1.0f, 1.0f, 1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 
 	
-	textureHandle_[0] = TextureManager::GetInstance()->Load("resources/uvChecker.png");
-	textureHandle_[1] = TextureManager::GetInstance()->Load("resources/monsterBall.png");
+	textureHandle_[0] = TextureManager::GetInstance()->Load("./resources/uvChecker.png");
+	textureHandle_[1] = TextureManager::GetInstance()->Load("./resources/monsterBall.png");
 
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelPlatform_);
