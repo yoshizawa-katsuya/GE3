@@ -3,62 +3,26 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
+#include "ModelPlatform.h"
 
-Model::Model(ID3D12Device* device, Transforms* camera, const int32_t kClientWidth, const int32_t kClientHeight) {
-
-	device_ = device;
-	cameratransform_ = camera;
-	kClientWidth_ = kClientWidth;
-	kClientHeight_ = kClientHeight;
-
-}
-
-void Model::Initialize()
+void Model::Initialize(Transforms* camera, ModelPlatform* modelPlatform)
 {
 
-
+	cameratransform_ = camera;
+	modelPlatform_ = modelPlatform;
 
 }
 
 void Model::CreateFromOBJ(const std::string& directoryPath, const std::string& filename) {
 
 	//モデル読み込み
-	modelData_ = LoadObjFile(directoryPath, filename);
+	LoadObjFile(directoryPath, filename);
 
-	//VertexResourceを生成
-	vertexResource_ = CreateBufferResource(device_, sizeof(VertexData) * modelData_.vertices.size());
+	CreateVertexData();
 	
-	//リソースの先頭のアドレスから使う
-	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
-	//1頂点当たりのサイズ
-	vertexBufferView_.StrideInBytes = sizeof(VertexData);
+	CreateMaterialData();
 
-	//頂点リソースにデータを書き込む
-	VertexData* vertexData = nullptr;
-	//書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	//頂点データをリソースにコピー
-	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	materialResource_ = CreateBufferResource(device_, sizeof(Material));
-	//マテリアルにデータを書き込む
-	//書き込むためのアドレスを取得
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	//白を書き込む
-	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	materialData_->enableLighting = true;
-	materialData_->uvTransform = MakeIdentity4x4();
-
-	//transformationMatrixのリソースを作る
-	transformationMatrixResource_ = CreateBufferResource(device_, sizeof(TransformationMatrix));
-	//データを書き込む
-	//書き込むためのアドレスを取得
-	transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
-	//単位行列を書き込んでおく
-	transformationMatrixData_->WVP = MakeIdentity4x4();
+	CreateTransformData();
 
 	textureHandle_ = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
 
@@ -69,7 +33,7 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameratransform_->scale, cameratransform_->rotate, cameratransform_->translate);
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth_) / float(kClientHeight_), 0.1f, 100.0f);
+	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::kClientWidth) / static_cast<float>(WinApp::kClientHeight), 0.1f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 
 	transformationMatrixData_->WVP = worldViewProjectionMatrix;
@@ -90,10 +54,60 @@ void Model::Draw(ID3D12GraphicsCommandList* commandList) {
 
 }
 
-ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
+void Model::CreateVertexData()
+{
+
+	//VertexResourceを生成
+	vertexResource_ = modelPlatform_->GetDxCommon()->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
+
+	//リソースの先頭のアドレスから使う
+	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+	//使用するリソースのサイズは頂点3つ分のサイズ
+	vertexBufferView_.SizeInBytes = UINT(sizeof(VertexData) * modelData_.vertices.size());
+	//1頂点当たりのサイズ
+	vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+	//頂点リソースにデータを書き込む
+	//書き込むためのアドレスを取得
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	//頂点データをリソースにコピー
+	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+
+
+}
+
+void Model::CreateMaterialData()
+{
+
+	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
+	materialResource_ = modelPlatform_->GetDxCommon()->CreateBufferResource(sizeof(Material));
+	//マテリアルにデータを書き込む
+	//書き込むためのアドレスを取得
+	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	//白を書き込む
+	materialData_->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialData_->enableLighting = true;
+	materialData_->uvTransform = MakeIdentity4x4();
+
+}
+
+void Model::CreateTransformData()
+{
+
+	//transformationMatrixのリソースを作る
+	transformationMatrixResource_ = modelPlatform_->GetDxCommon()->CreateBufferResource(sizeof(TransformationMatrix));
+	//データを書き込む
+	//書き込むためのアドレスを取得
+	transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
+	//単位行列を書き込んでおく
+	transformationMatrixData_->WVP = MakeIdentity4x4();
+
+}
+
+void Model::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
 
 	//1.中で必要となる変数の宣言
-	ModelData modelData;	//構築するModelData
+	
 	std::vector<Vector4> positions;	//位置
 	std::vector<Vector3> normals;	//法線
 	std::vector<Vector2> texcords;	//テクスチャ座標
@@ -150,28 +164,26 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 				//modelData.vertices.push_back(vertex);
 				triangle[faceVertex] = { position, texcord, normal };
 			}
-			modelData.vertices.push_back(triangle[2]);
-			modelData.vertices.push_back(triangle[1]);
-			modelData.vertices.push_back(triangle[0]);
+			modelData_.vertices.push_back(triangle[2]);
+			modelData_.vertices.push_back(triangle[1]);
+			modelData_.vertices.push_back(triangle[0]);
 		}
 		else if (identifier == "mtllib") {
 			//materialTemplateLibraryファイルの名前を取得する
 			std::string materialFilename;
 			s >> materialFilename;
 			//基本的にobjファイルと同一階層にmtlは存在させるので、ディレクトリ名とファイル名を渡す
-			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
+			LoadMaterialTemplateFile(directoryPath, materialFilename);
 		}
 
 	}
 
-	//4.ModelDataを返す
-	return modelData;
+	
 }
 
-MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {
+void Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {
 
 	//1.中で必要となる変数の宣言
-	MaterialData materialData;	//構築するMaterialData
 	std::string line;	//ファイルから読んだ1行を格納するもの
 
 	//2.ファイルを開く
@@ -189,40 +201,9 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 			std::string textureFilename;
 			s >> textureFilename;
 			//連結してファイルパスにする
-			materialData.textureFilePath = directoryPath + "/" + textureFilename;
+			modelData_.material.textureFilePath = directoryPath + "/" + textureFilename;
 		}
 	}
 
-	//4.ModelDataを返す
-	return materialData;
-}
-
-Microsoft::WRL::ComPtr<ID3D12Resource> Model::CreateBufferResource(Microsoft::WRL::ComPtr<ID3D12Device> device, size_t sizeInBytes)
-{
-
-	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
-	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-	//頂点リソースの設定
-	D3D12_RESOURCE_DESC ResourceDesc{};
-	//バッファリソース。テクスチャの場合はまた別の設定をする
-	ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	ResourceDesc.Width = sizeInBytes;
-	//バッファの場合はこれらは1にする決まり
-	ResourceDesc.Height = 1;
-	ResourceDesc.DepthOrArraySize = 1;
-	ResourceDesc.MipLevels = 1;
-	ResourceDesc.SampleDesc.Count = 1;
-	//バッファの場合はこれにする決まり
-	ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//実際に頂点リソースを作る
-	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-		&ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&Resource));
-	assert(SUCCEEDED(hr));
-
-	return Resource;
-
-	//assert(SUCCEEDED(hr));
-
+	
 }

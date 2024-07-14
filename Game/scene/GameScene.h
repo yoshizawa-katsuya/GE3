@@ -7,6 +7,7 @@
 #include "ModelPlatform.h"
 #include "SpritePlatform.h"
 #include "Model.h"
+#include "DirectionalLight.h"
 #include "Sprite.h"
 #include "Player.h"
 
@@ -39,10 +40,8 @@ private:
 
 	uint32_t textureHandle_[2];
 
-	//平行光源用のResourceを作成
-	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_;
-	//データを書き込む
-	DirectionalLight* directionalLightData_;
+	//平行光源
+	std::unique_ptr<DirectionalLight> directionalLight_;
 
 	std::unique_ptr<Model> model_;
 

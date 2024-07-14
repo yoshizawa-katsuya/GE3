@@ -4,27 +4,18 @@
 #include <Windows.h>
 #include <d3d12.h>
 #include <wrl.h>
+class ModelPlatform;
 
 class Model
 {
 public:
 
-	Model(ID3D12Device* device, Transforms* camera, const int32_t kClientWidth, const int32_t kClientHeight);
-
-	void Initialize();
+	
+	void Initialize(Transforms* camera, ModelPlatform* modelPlatform);
 
 	void CreateFromOBJ(const std::string& directoryPath, const std::string& filename);
 
 	void Draw(ID3D12GraphicsCommandList* commandList);
-
-	//objファイルの読み込み
-	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
-
-	//mtlファイルの読み込み
-	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
-
-	//Resource作成の関数化
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(Microsoft::WRL::ComPtr<ID3D12Device> device, size_t sizeInBytes);
 
 	Material& GetMaterialDataAddress() { return *materialData_; }
 
@@ -34,16 +25,30 @@ public:
 
 private:
 
-	int32_t kClientWidth_;
-	int32_t kClientHeight_;
+	//頂点データ作成
+	void CreateVertexData();
 
-	//デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device> device_;
+	//マテリアルデータ作成
+	void CreateMaterialData();
+
+	//座標行列変換データ作成
+	void CreateTransformData();
+
+	//objファイルの読み込み
+	void LoadObjFile(const std::string& directoryPath, const std::string& filename);
+
+	//mtlファイルの読み込み
+	void LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+
+	
+	ModelPlatform* modelPlatform_ = nullptr;
 
 	ModelData modelData_;
 
 	//VertexResourceを生成
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
+
+	VertexData* vertexData_ = nullptr;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 

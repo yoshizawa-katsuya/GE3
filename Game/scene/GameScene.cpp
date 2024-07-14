@@ -16,24 +16,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	spritePlatform_ = spritePlatform;
 	modelPlatform_ = modelPlatform;
 
-	//平行光源用のResourceを作成
-	directionalLightResource_ = dxCommon_->CreateBufferResource(sizeof(DirectionalLight));
-	//データを書き込む
-	//書き込むためのアドレスを取得
-	directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
-	//デフォルト値
-	directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	directionalLightData_->direction = { 0.0f, 0.0f, 1.0f };
-	directionalLightData_->intensity = 1.0f;
+	directionalLight_ = std::make_unique<DirectionalLight>();
+	directionalLight_->Initialize(dxCommon_);
 
+	modelPlatform_->SetDirectionalLight(directionalLight_.get());
 
-	cameratransform = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -10.0f} };
+	cameratransform = { {1.0f, 1.0f, 1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
 
 	
 	textureHandle_[0] = TextureManager::GetInstance()->Load("resources/uvChecker.png");
 	textureHandle_[1] = TextureManager::GetInstance()->Load("resources/monsterBall.png");
 
-	model_ = std::make_unique<Model>(dxCommon_->GetDevice(), &cameratransform, WinApp::kClientWidth, WinApp::kClientHeight);
+	model_ = std::make_unique<Model>();
+	model_->Initialize(&cameratransform, modelPlatform_);
 	model_->CreateFromOBJ("./resources", "plane.obj");
 	
 	sprite_ = std::make_unique<Sprite>();
@@ -99,10 +94,9 @@ void GameScene::Update() {
 	}
 
 	if (ImGui::TreeNode("directionalLight")) {
-		ImGui::DragFloat4("color", &directionalLightData_->color.x, 0.01f);
-		ImGui::DragFloat3("direction", &directionalLightData_->direction.x, 0.01f);
-		directionalLightData_->direction = Normalize(directionalLightData_->direction);
-		ImGui::DragFloat("intensity", &directionalLightData_->intensity, 0.01f);
+		ImGui::ColorEdit4("color", &directionalLight_->GetColor().x);
+		ImGui::DragFloat3("direction", &directionalLight_->GetDirection().x, 0.01f);
+		ImGui::DragFloat("intensity", &directionalLight_->GetIntensity(), 0.01f);
 
 		ImGui::TreePop();
 	}
@@ -126,8 +120,6 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 
 
 	//dxCommon->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonaterBall ? textureSrvHandleGPU2 : textureSrvHandleGPU);
-	//DirectionalRight
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
 	//Modelの描画前処理
 	modelPlatform_->PreDraw();

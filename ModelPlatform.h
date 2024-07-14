@@ -1,6 +1,7 @@
 #pragma once
 #include "DirectXCommon.h"
 #include "PrimitiveDrawer.h"
+#include "DirectionalLight.h"
 
 class ModelPlatform
 {
@@ -13,10 +14,14 @@ public:
 
 	DirectXCommon* GetDxCommon() const { return dxCommon_; }
 
+	void SetDirectionalLight(DirectionalLight* directionalLight) { directionalLight_ = directionalLight; }
+
 private:
 
 	DirectXCommon* dxCommon_;
 
 	PrimitiveDrawer* primitiveDrawer_;
+
+	DirectionalLight* directionalLight_;
 };
 

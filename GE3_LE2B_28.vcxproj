@@ -95,6 +95,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="D3DResourceLeakChecker.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\externals\imgui\imgui.cpp" />
     <ClCompile Include="Engine\externals\imgui\imgui_demo.cpp" />
@@ -130,6 +131,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DResourceLeakChecker.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\externals\imgui\imconfig.h" />
     <ClInclude Include="Engine\externals\imgui\imgui.h" />
