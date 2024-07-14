@@ -11,17 +11,17 @@ class Model
 public:
 
 	
-	void Initialize(Transforms* camera, ModelPlatform* modelPlatform);
+	void Initialize(ModelPlatform* modelPlatform);
 
 	void CreateFromOBJ(const std::string& directoryPath, const std::string& filename);
 
-	void Draw(ID3D12GraphicsCommandList* commandList);
+	void Draw(const Transforms& transform, Transforms* cameratransform);
 
 	Material& GetMaterialDataAddress() { return *materialData_; }
 
-	Transforms& GetTransformAddress() { return transform_; }
+	//Transforms& GetTransformAddress() { return transform_; }
 
-	void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
+	//void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
 
 private:
 
@@ -62,11 +62,7 @@ private:
 	//データを書き込む
 	TransformationMatrix* transformationMatrixData_ = nullptr;
 
-	//Transform変数を作る
-	Transforms transform_{ {1.0f, 1.0f, 1.0f}, { 0.0f, 0.0f, 0.0f}, { 0.0f, 0.0f, 0.0f } };
-
-	//カメラの変数
-	Transforms* cameratransform_;
+	
 
 	uint32_t textureHandle_;
 

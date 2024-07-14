@@ -60,10 +60,10 @@ uint32_t TextureManager::Load(const std::string& fileName) {
 	return index_;
 }
 
-void TextureManager::SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle) {
+void TextureManager::SetGraphicsRootDescriptorTable(uint32_t textureHandle) {
 
 	// シェーダリソースビューをセット
-	commandList->SetGraphicsRootDescriptorTable(rootParamIndex, textures_[textureHandle].gpuDescHandleSRV);
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textures_[textureHandle].gpuDescHandleSRV);
 
 }
 

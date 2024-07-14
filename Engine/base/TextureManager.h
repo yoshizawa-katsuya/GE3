@@ -26,7 +26,7 @@ public:
 
 	
 	// デスクリプタテーブルをセット
-	void SetGraphicsRootDescriptorTable(ID3D12GraphicsCommandList* commandList, UINT rootParamIndex, uint32_t textureHandle);
+	void SetGraphicsRootDescriptorTable(uint32_t textureHandle);
 
 	//メタデータを取得
 	const DirectX::TexMetadata& GetMetaData(uint32_t textureHandle);

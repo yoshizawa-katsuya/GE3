@@ -28,7 +28,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	textureHandle_[1] = TextureManager::GetInstance()->Load("resources/monsterBall.png");
 
 	model_ = std::make_unique<Model>();
-	model_->Initialize(&cameratransform, modelPlatform_);
+	model_->Initialize(modelPlatform_);
 	model_->CreateFromOBJ("./resources", "plane.obj");
 	
 	sprite_ = std::make_unique<Sprite>();
@@ -50,7 +50,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	*/
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
-	player_->Initialize(model_.get());
+	player_->Initialize(model_.get(), &cameratransform);
 
 }
 
@@ -124,7 +124,7 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 	//Modelの描画前処理
 	modelPlatform_->PreDraw();
 	//プレイヤーの描画
-	player_->Draw(dxCommon_->GetCommandList());
+	player_->Draw();
 
 	//modelの描画
 	//model_->Draw(commandList);
