@@ -123,16 +123,16 @@
     <ClCompile Include="Engine\lib\dx12.cpp">
       <Filter>ソース ファイル\lib</Filter>
     </ClCompile>
-    <ClCompile Include="D3DResourceLeakChecker.cpp">
+    <ClCompile Include="Engine\base\D3DResourceLeakChecker.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="SpritePlatform.cpp">
+    <ClCompile Include="Engine\2d\SpritePlatform.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
-    <ClCompile Include="ModelPlatform.cpp">
+    <ClCompile Include="Engine\3d\ModelPlatform.cpp">
       <Filter>ソース ファイル\3d</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
+    <ClCompile Include="Engine\3d\DirectionalLight.cpp">
       <Filter>ソース ファイル\3d</Filter>
     </ClCompile>
   </ItemGroup>
@@ -204,16 +204,16 @@
     <ClInclude Include="Engine\lib\dx12.h">
       <Filter>ヘッダー ファイル\lib</Filter>
     </ClInclude>
-    <ClInclude Include="D3DResourceLeakChecker.h">
+    <ClInclude Include="Engine\base\D3DResourceLeakChecker.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
-    <ClInclude Include="SpritePlatform.h">
+    <ClInclude Include="Engine\2d\SpritePlatform.h">
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
-    <ClInclude Include="ModelPlatform.h">
+    <ClInclude Include="Engine\3d\ModelPlatform.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
+    <ClInclude Include="Engine\3d\DirectionalLight.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
   </ItemGroup>
