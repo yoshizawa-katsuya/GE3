@@ -8,9 +8,7 @@
 #include <string>
 #include <array>
 #include <chrono>
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_dx12.h"
-#include "imgui/imgui_impl_win32.h"
+
 #include "WinApp.h"
 #include "DirectXTex/DirectXTex.h"
 
@@ -39,15 +37,16 @@ public:
 	//TextureResourceを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata);
 
+	//DiscriptorHeap作成の関数
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisiblr);
+
+
 	// デバイスの取得
 	ID3D12Device* GetDevice() const { return device_.Get(); }
 
 	//描画コマンドリストの取得
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
 
-	ID3D12DescriptorHeap* GetSRVDescriptorHeap() const { return srvDescriptorHeap_.Get(); }
-
-	uint32_t GetDescriptorSizeSRV() const { return descriptorSizeSRV_; }
 
 	IDxcUtils* GetDxcUtils() const { return dxcUtils_.Get(); }
 
@@ -65,15 +64,7 @@ public:
 	/// </summary>
 	D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
 
-	/// <summary>
-	/// SRVの指定番号のCPUデスクリプタハンドルを取得
-	/// </summary>
-	D3D12_CPU_DESCRIPTOR_HANDLE GetSRVCPUDescriptorHandle(uint32_t index);
-
-	/// <summary>
-	/// SRVの指定番号のGPUデスクリプタハンドルを取得
-	/// </summary>
-	D3D12_GPU_DESCRIPTOR_HANDLE GetSRVGPUDescriptorHandle(uint32_t index);
+	
 
 	/// <summary>
 	/// DSVの指定番号のCPUデスクリプタハンドルを取得
@@ -85,9 +76,7 @@ public:
 	/// </summary>
 	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
 
-	// デスクリプターの数
-	static const UINT kMaxSrvDescriptors_ = 512;
-
+	
 private:
 
 	//DXGIデバイス初期化
@@ -121,7 +110,7 @@ private:
 	void CreateDXCCompiler();
 
 	//ImGuiの初期化
-	void ImGuiInitialize();
+	//void ImGuiInitialize();
 
 	//FPS固定初期化
 	void InitializeFixFPS();
@@ -132,9 +121,7 @@ private:
 	//DepthStencilTextureを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(int32_t width, int32_t height);
 
-	//DiscriptorHeap作成の関数
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisiblr);
-
+	
 	//DescriptorHandleを取得する関数。CPU
 	static D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
@@ -154,7 +141,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap_;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap_;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap_;
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
 	uint64_t fenceValue_ = 0;
@@ -164,7 +150,6 @@ private:
 
 
 	uint32_t descriptorSizeRTV_;
-	uint32_t descriptorSizeSRV_;
 	uint32_t descriptorSizeDSV_;
 
 	D3D12_VIEWPORT viewport_{};

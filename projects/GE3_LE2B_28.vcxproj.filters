@@ -141,6 +141,12 @@
     <ClCompile Include="Object3d.cpp">
       <Filter>ソース ファイル\objects</Filter>
     </ClCompile>
+    <ClCompile Include="SrvHeapManager.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiManager.cpp">
+      <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl" />
@@ -227,6 +233,12 @@
     </ClInclude>
     <ClInclude Include="Object3d.h">
       <Filter>ヘッダー ファイル\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SrvHeapManager.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiManager.h">
+      <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

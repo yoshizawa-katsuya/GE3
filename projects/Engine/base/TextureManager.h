@@ -6,6 +6,7 @@
 #include <wrl.h>
 #include "DirectXCommon.h"
 #include "DirectXTex/DirectXTex.h"
+#include "SrvHeapManager.h"
 
 class TextureManager
 {
@@ -18,7 +19,7 @@ public:
 	void Finalize();
 
 	//初期化
-	void Initialize(DirectXCommon* dxCommon);
+	void Initialize(DirectXCommon* dxCommon, SrvHeapManager* srvHeapManager);
 
 	
 	//読み込み
@@ -51,6 +52,7 @@ private:
 	TextureManager& operator=(TextureManager&) = default;
 
 	DirectXCommon* dxCommon_;
+	SrvHeapManager* srvHeapManager_;
 
 	uint32_t index_;
 
@@ -71,6 +73,6 @@ private:
 	};
 
 	// テクスチャコンテナ
-	std::array<Texture, DirectXCommon::kMaxSrvDescriptors_> textures_;
+	std::array<Texture, SrvHeapManager::kMaxSrvDescriptors_> textures_;
 
 };

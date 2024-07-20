@@ -1,5 +1,7 @@
 #include "WinApp.h"
 #include "DirectXCommon.h"
+#include "SrvHeapManager.h"
+#include "ImGuiManager.h"
 #include "TextureManager.h"
 #include "Sprite.h"
 #include "SpritePlatform.h"
@@ -31,12 +33,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	DirectXCommon* dxCommon = new DirectXCommon;
 	dxCommon->Initialize(winApp);
 
+	//SrvHeapManager初期化
+	SrvHeapManager* srvHeapManager = new SrvHeapManager;
+	srvHeapManager->Initialize(dxCommon);
+
+	ImGuiManager* imGuiManager = new ImGuiManager;
+	imGuiManager->Initialize(dxCommon, winApp, srvHeapManager);
+
 	//入力の初期化
 	Input* input = new Input;
 	input->Initialize(winApp);
 
 	//TextureManager初期化
-	TextureManager::GetInstance()->Initialize(dxCommon);
+	TextureManager::GetInstance()->Initialize(dxCommon, srvHeapManager);
 
 	//PSOの設定
 	PrimitiveDrawer* primitiveDrawer = new PrimitiveDrawer;
@@ -83,6 +92,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//描画開始
 		dxCommon->PreDraw();
 
+		srvHeapManager->PreDraw();
 		
 		//ImGuiの内部コマンドを生成する
 		ImGui::Render();
@@ -148,6 +158,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//入力開放
 	delete input;
 	input = nullptr;
+
+	delete imGuiManager;
+	imGuiManager = nullptr;
+
+	delete srvHeapManager;
+	srvHeapManager = nullptr;
 
 	delete dxCommon;
 	dxCommon = nullptr;
