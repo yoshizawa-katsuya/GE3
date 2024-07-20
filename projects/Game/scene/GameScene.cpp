@@ -3,7 +3,6 @@
 #include "dx12.h"
 #include "imgui/imgui.h"
 
-
 GameScene::~GameScene() {
 
 
@@ -21,15 +20,20 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 
 	modelPlatform_->SetDirectionalLight(directionalLight_.get());
 
-	cameratransform = { {1.0f, 1.0f, 1.0f}, {0.3f, 0.0f, 0.0f}, {0.0f, 4.0f, -10.0f} };
+	camera_ = std::make_unique<Camera>();
+	camera_->SetRotate({ 0.3f, 0.0f, 0.0f });
+	camera_->SetTransform({ 0.0f, 3.0f, -10.0f });
 
-	
 	textureHandle_[0] = TextureManager::GetInstance()->Load("./resources/uvChecker.png");
 	textureHandle_[1] = TextureManager::GetInstance()->Load("./resources/monsterBall.png");
 
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelPlatform_);
 	model_->CreateFromOBJ("./resources", "plane.obj");
+
+	modelAxis_ = std::make_unique<Model>();
+	modelAxis_->Initialize(modelPlatform_);
+	modelAxis_->CreateFromOBJ("./resources", "axis.obj");
 	
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize(textureHandle_[0], spritePlatform_);
@@ -50,16 +54,23 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	*/
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
-	player_->Initialize(model_.get(), &cameratransform);
+	player_->Initialize(model_.get(), camera_.get());
+
+	//3dオブジェクトの初期化
+	object3d_ = std::make_unique<Object3d>();
+	object3d_->Initialize(modelAxis_.get(), camera_.get());
 
 }
 
 void GameScene::Update() {
 
+	camera_->Update();
+
 	//プレイヤーの更新
 	player_->Update();
 
-	
+	//3dオブジェクトの更新
+	object3d_->Update();
 
 	ImGui::Begin("Window");
 	
@@ -86,9 +97,9 @@ void GameScene::Update() {
 	}
 	
 	if (ImGui::TreeNode("camera")) {
-		ImGui::DragFloat3("translate", &cameratransform.translate.x, 0.01f);
-		ImGui::DragFloat3("rotate", &cameratransform.rotate.x, 0.01f);
-		ImGui::DragFloat3("scale", &cameratransform.scale.x, 0.01f);
+		ImGui::DragFloat3("translate", &camera_->GetTranslate().x, 0.01f);
+		ImGui::DragFloat3("rotate", &camera_->GetRotate().x, 0.01f);
+		//ImGui::DragFloat3("scale", &cameratransform.scale.x, 0.01f);
 
 		ImGui::TreePop();
 	}
@@ -125,6 +136,8 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 	modelPlatform_->PreDraw();
 	//プレイヤーの描画
 	player_->Draw();
+	//3dオブジェクトの描画
+	object3d_->Draw();
 
 	//modelの描画
 	//model_->Draw(commandList);

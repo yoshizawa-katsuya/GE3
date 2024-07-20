@@ -135,6 +135,12 @@
     <ClCompile Include="Engine\3d\DirectionalLight.cpp">
       <Filter>ソース ファイル\3d</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>ソース ファイル\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Object3d.cpp">
+      <Filter>ソース ファイル\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl" />
@@ -215,6 +221,12 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\DirectionalLight.h">
       <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Object3d.h">
+      <Filter>ヘッダー ファイル\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

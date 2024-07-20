@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <wrl.h>
 class ModelPlatform;
+class Camera;
 
 class Model
 {
@@ -15,7 +16,7 @@ public:
 
 	void CreateFromOBJ(const std::string& directoryPath, const std::string& filename);
 
-	void Draw(const Transforms& transform, Transforms* cameratransform);
+	void Draw(const Transforms& transform, Camera* camera);
 
 	Material& GetMaterialDataAddress() { return *materialData_; }
 

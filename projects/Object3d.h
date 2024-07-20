@@ -2,7 +2,7 @@
 #include "Model.h"
 class Camera;
 
-class Player
+class Object3d
 {
 public:
 

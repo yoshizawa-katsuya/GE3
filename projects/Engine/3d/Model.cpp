@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cassert>
 #include "ModelPlatform.h"
+#include "Camera.h"
 
 void Model::Initialize(ModelPlatform* modelPlatform)
 {
@@ -27,13 +28,18 @@ void Model::CreateFromOBJ(const std::string& directoryPath, const std::string& f
 
 }
 
-void Model::Draw(const Transforms& transform, Transforms* cameratransform) {
+void Model::Draw(const Transforms& transform, Camera* camera) {
 
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameratransform->scale, cameratransform->rotate, cameratransform->translate);
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, static_cast<float>(WinApp::kClientWidth) / static_cast<float>(WinApp::kClientHeight), 0.1f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	
+	Matrix4x4 worldViewProjectionMatrix;
+	if (camera) {
+		const Matrix4x4& viewProjectionMatrix = camera->GetViewProjection();
+		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+	}
+	else {
+		worldViewProjectionMatrix = worldMatrix;
+	}
 
 	transformationMatrixData_->WVP = worldViewProjectionMatrix;
 	transformationMatrixData_->World = worldMatrix;

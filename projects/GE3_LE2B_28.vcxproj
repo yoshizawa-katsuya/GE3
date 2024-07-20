@@ -102,6 +102,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Engine\base\D3DResourceLeakChecker.cpp" />
     <ClCompile Include="Engine\3d\DirectionalLight.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
@@ -126,6 +127,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\objects\Player.cpp" />
     <ClCompile Include="Engine\3d\ModelPlatform.cpp" />
     <ClCompile Include="Engine\2d\SpritePlatform.cpp" />
+    <ClCompile Include="Object3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -138,6 +140,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Engine\base\D3DResourceLeakChecker.h" />
     <ClInclude Include="Engine\3d\DirectionalLight.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
@@ -163,6 +166,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\3d\ModelPlatform.h" />
     <ClInclude Include="Engine\2d\SpritePlatform.h" />
+    <ClInclude Include="Object3d.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\externals\imgui\LICENSE.txt" />
