@@ -36,13 +36,10 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 		Microsoft::WRL::ComPtr<ID3D12Device> device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisiblr);
 
+private:
+
 	//Textureデータを読む
 	void LoadTexture(const std::string& filePath);
-	
-
-	
-
-private:
 
 	static TextureManager* instance_;
 

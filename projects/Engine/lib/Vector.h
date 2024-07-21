@@ -20,7 +20,7 @@ float Length(const Vector3& v);
 //正規化
 Vector3 Normalize(const Vector3& v);
 
-void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
+//void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label);
 
 //クロス積
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
@@ -33,3 +33,17 @@ Vector3 Project(const Vector3& v1, const Vector3& v2);
 
 //垂直なベクトルを求める
 Vector3 Perpendicular(const Vector3& vector);
+
+Vector3 operator+(const Vector3& v1, const Vector3& v2);
+
+Vector3 operator-(const Vector3& v1, const Vector3& v2);
+
+Vector3 operator*(float s, const Vector3& v);
+
+Vector3 operator*(const Vector3& v, float s);
+
+Vector3 operator/(const Vector3& v, float s);
+
+Vector3 operator-(const Vector3& v);
+
+Vector3 operator+(const Vector3& v);

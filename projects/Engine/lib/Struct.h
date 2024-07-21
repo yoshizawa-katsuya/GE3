@@ -20,6 +20,12 @@ typedef struct Vector3{
 	float x;
 	float y;
 	float z;
+
+	Vector3& operator*=(float s) { x *= s;  y *= s; z *= s; return *this; }
+	Vector3& operator-=(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+	Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	Vector3& operator/=(float s) { x /= s;  y /= s; z /= s; return *this; }
+
 }Vector3;
 
 typedef struct Vector4 {
@@ -46,6 +52,11 @@ typedef struct Matrix4x4
 {
 	float m[4][4];
 } Matrix4x4;
+
+struct AABB {
+	Vector3 min;
+	Vector3 max;
+};
 
 typedef struct Material {
 	Vector4 color;
@@ -96,4 +107,30 @@ struct MaterialData
 struct ModelData {
 	std::vector<VertexData> vertices;
 	MaterialData material;
+};
+
+struct Particle {
+	Transforms transform;
+	Vector3 velocity;
+	Vector4 color;
+	float lifeTime;
+	float currentTime;
+};
+
+struct Emitter {
+	Transforms transform; //!< エミッタのTransform
+	uint32_t count;	//!< 発生数
+	float frequency; //!<　発生頻度
+	float frequencyTime; //!<頻度用時刻
+};
+
+struct ParticleForGPU {
+	Matrix4x4 WVP;
+	Matrix4x4 World;
+	Vector4 color;
+};
+
+struct AccelerationField {
+	Vector3 accerelation;	//加速度
+	AABB area;	//範囲
 };

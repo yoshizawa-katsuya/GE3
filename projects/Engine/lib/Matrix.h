@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Struct.h"
 #include <assert.h>
 //#include <Novice.h>
@@ -68,3 +68,11 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 
 //ビューポート変換行列
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+
+bool IsCollision(const AABB& aabb, const Vector3& point);
+
+Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2);
+
+Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2);
+
+Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);

@@ -1,3 +1,4 @@
+#include "dx12.h"
 #include "PrimitiveDrawer.h"
 #include <cassert>
 #include <format>
@@ -19,7 +20,7 @@ void PrimitiveDrawer::Initialize(DirectXCommon* dxCommon) {
 
 	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeNoneSprite)) = CreateGraphicsPipeline(BlendMode::kBlendModeNoneSprite, dxCommon);
 
-
+	pipelineSets_.at(static_cast<uint16_t>(BlendMode::kBlendModeAddParticle)) = CreateGraphicsPipeline(BlendMode::kBlendModeAddParticle, dxCommon);
 }
 
 std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPipeline(BlendMode blendMode, DirectXCommon* dxCommon) {
@@ -48,9 +49,30 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;	//PixelShaderで使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;	//レジスタ番号0とバインド
 
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//CBVを使う
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	//VertexShaderで使う
-	rootParameters[1].Descriptor.ShaderRegister = 0;	//レジスタ番号0を使う
+	switch (blendMode) {
+	default:
+		//Object3d用
+		rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;	//CBVを使う
+		rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	//VertexShaderで使う
+		rootParameters[1].Descriptor.ShaderRegister = 0;	//レジスタ番号0を使う
+		break;
+	case BlendMode::kBlendModeAddParticle:
+
+		D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing[1] = {};
+		descriptorRangeForInstancing[0].BaseShaderRegister = 0;	//0から始まる
+		descriptorRangeForInstancing[0].NumDescriptors = 1;	//数は1つ
+		descriptorRangeForInstancing[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;	//SRVを使う
+		descriptorRangeForInstancing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;	//Offsetを自動計算
+
+
+		//Particle用
+		rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//DescriptorTableを使う
+		rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;	//VertexShaderで使う
+		rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing;
+		rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing);
+
+		break;
+	}
 
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;	//DescriptorTableを使う
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;	//PixelShaderで使う
@@ -83,7 +105,7 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 	HRESULT hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
-		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
+		Logger::Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	//バイナリを元に生成
@@ -131,6 +153,7 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 		break;
 
 	case BlendMode::kBlendModeAdd:
+	case BlendMode::kBlendModeAddParticle:
 		blendDesc.RenderTarget[0].BlendEnable = TRUE;
 		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
@@ -177,20 +200,50 @@ std::unique_ptr<PrimitiveDrawer::PipelineSet> PrimitiveDrawer::CreateGraphicsPip
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//Shaderをコンパイルする
-	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob = dxCommon->CompilerShader(L"resources/shader/Object3d.VS.hlsl",
-		L"vs_6_0");
-	assert(vertexShaderBlob != nullptr);
+	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob;
+	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob;
+	
+	switch (blendMode) {
+	default:
+		//Object3d用
+		
+		vertexShaderBlob = dxCommon->CompilerShader(L"resources/shader/Object3d.VS.hlsl",
+			L"vs_6_0");
+		assert(vertexShaderBlob != nullptr);
 
-	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob = dxCommon->CompilerShader(L"resources/shader/Object3d.PS.hlsl",
-		L"ps_6_0");
-	assert(pixelShaderBlob != nullptr);
+		pixelShaderBlob = dxCommon->CompilerShader(L"resources/shader/Object3d.PS.hlsl",
+			L"ps_6_0");
+		assert(pixelShaderBlob != nullptr);
+		break;
+	case BlendMode::kBlendModeAddParticle:
+
+		//Particle用
+		vertexShaderBlob = dxCommon->CompilerShader(L"resources/shader/Particle.VS.hlsl",
+			L"vs_6_0");
+		assert(vertexShaderBlob != nullptr);
+
+		pixelShaderBlob = dxCommon->CompilerShader(L"resources/shader/Particle.PS.hlsl",
+			L"ps_6_0");
+		assert(pixelShaderBlob != nullptr);
+
+		break;
+	}
+
+	
 
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	//Depthの機能を有効化する
 	depthStencilDesc.DepthEnable = true;
-	//書き込みします
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	switch (blendMode) {
+	default:
+		//書き込みします
+		depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+		break;
+	case BlendMode::kBlendModeAddParticle:
+		depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+		break;
+	}
 	//比較関数はLessEqual。つまり、近ければ描画される
 	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
@@ -232,40 +285,4 @@ void PrimitiveDrawer::SetPipelineSet(ID3D12GraphicsCommandList* commandList, Ble
 	commandList->SetPipelineState(pipelineSets_.at(static_cast<uint16_t>(blendMode))->graphicsPipelineState.Get());	//PSOを設定
 
 
-}
-
-
-
-void PrimitiveDrawer::Log(const std::string& message) {
-
-	OutputDebugStringA(message.c_str());
-
-}
-
-std::wstring PrimitiveDrawer::ConvertString(const std::string& str) {
-	if (str.empty()) {
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0) {
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-	return result;
-}
-
-std::string PrimitiveDrawer::ConvertString(const std::wstring& str) {
-	if (str.empty()) {
-		return std::string();
-	}
-
-	auto sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), NULL, 0, NULL, NULL);
-	if (sizeNeeded == 0) {
-		return std::string();
-	}
-	std::string result(sizeNeeded, 0);
-	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
-	return result;
 }

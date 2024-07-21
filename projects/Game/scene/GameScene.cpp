@@ -2,6 +2,7 @@
 #include "Vector.h"
 #include "dx12.h"
 #include "imgui/imgui.h"
+#include "ParticleManager.h"
 
 GameScene::~GameScene() {
 
@@ -60,6 +61,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Initialize(modelAxis_.get(), camera_.get());
 
+	emitter_ = std::make_unique<ParticleEmitter>("circle", 3, 0.5f);
+	emitter_->Initialize(textureHandle_[0]);
+
 }
 
 void GameScene::Update() {
@@ -71,6 +75,10 @@ void GameScene::Update() {
 
 	//3dオブジェクトの更新
 	object3d_->Update();
+
+	emitter_->Update();
+
+	ParticleManager::GetInstance()->Update(camera_.get());
 
 	ImGui::Begin("Window");
 	
@@ -135,9 +143,11 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 	//Modelの描画前処理
 	modelPlatform_->PreDraw();
 	//プレイヤーの描画
-	player_->Draw();
+	//player_->Draw();
 	//3dオブジェクトの描画
-	object3d_->Draw();
+	//object3d_->Draw();
+
+	ParticleManager::GetInstance()->Draw();
 
 	//modelの描画
 	//model_->Draw(commandList);

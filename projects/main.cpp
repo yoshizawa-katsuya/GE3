@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "ModelPlatform.h"
 #include "PrimitiveDrawer.h"
+#include "ParticleManager.h"
 #include "GameScene.h"
 #include "Input.h"
 #include "dx12.h"
@@ -54,6 +55,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//スプライト共通部の初期化
 	SpritePlatform* spritePlatform = new SpritePlatform;
 	spritePlatform->Initialize(dxCommon, primitiveDrawer);
+
+	//ParticleManagerの初期化
+	ParticleManager::GetInstance()->Initialize(dxCommon, srvHeapManager, primitiveDrawer);
 
 	//3Dオブジェクト共通部の初期化
 	ModelPlatform* modelPlatform = new ModelPlatform;
@@ -149,6 +153,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	delete spritePlatform;
 	spritePlatform = nullptr;
+
+	ParticleManager::GetInstance()->Finalize();
 
 	delete primitiveDrawer;
 	primitiveDrawer = nullptr;

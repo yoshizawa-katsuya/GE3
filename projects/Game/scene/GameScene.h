@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Object3d.h"
 #include "Camera.h"
+#include "ParticleEmitter.h"
 
 class GameScene
 {
@@ -55,6 +56,8 @@ private:
 
 	//3Dオブジェクト
 	std::unique_ptr<Object3d> object3d_;
+
+	std::unique_ptr<ParticleEmitter> emitter_;
 
 };
 

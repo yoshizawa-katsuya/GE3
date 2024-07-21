@@ -21,6 +21,8 @@ enum class BlendMode {
 
 	kBlendModeNoneSprite,
 
+	kBlendModeAddParticle,
+
 	kCountOfBlendMode,	//利用してはいけない
 };
 
@@ -42,11 +44,6 @@ public:
 	//パイプライン生成
 	std::unique_ptr<PipelineSet> CreateGraphicsPipeline(BlendMode blendMode, DirectXCommon* dxCommon);
 
-	void Log(const std::string& message);
-
-	std::wstring ConvertString(const std::string& str);
-
-	std::string ConvertString(const std::wstring& str);
 
 	void SetPipelineSet(ID3D12GraphicsCommandList* commandList, BlendMode blendMode);
 

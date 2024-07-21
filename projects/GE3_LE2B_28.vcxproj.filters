@@ -61,6 +61,9 @@
     <Filter Include="ヘッダー ファイル\input">
       <UniqueIdentifier>{6d202443-46c0-4c15-a6f0-b8e54f165814}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\shader">
+      <UniqueIdentifier>{0efeb8c7-ba96-4736-b6bb-bc70fc08273b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -147,10 +150,26 @@
     <ClCompile Include="ImGuiManager.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>ソース ファイル\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>ソース ファイル\3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="resources\shader\Object3d.PS.hlsl" />
-    <FxCompile Include="resources\shader\Object3d.VS.hlsl" />
+    <FxCompile Include="resources\shader\Object3d.PS.hlsl">
+      <Filter>リソース ファイル\shader</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shader\Object3d.VS.hlsl">
+      <Filter>リソース ファイル\shader</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shader\Particle.PS.hlsl">
+      <Filter>リソース ファイル\shader</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shader\Particle.VS.hlsl">
+      <Filter>リソース ファイル\shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\externals\imgui\imconfig.h">
@@ -240,11 +259,22 @@
     <ClInclude Include="ImGuiManager.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shader\Object3d.hlsli" />
+    <None Include="resources\shader\Object3d.hlsli">
+      <Filter>リソース ファイル\shader</Filter>
+    </None>
+    <None Include="resources\shader\Particle.hlsli">
+      <Filter>リソース ファイル\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
