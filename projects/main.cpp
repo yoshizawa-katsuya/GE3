@@ -136,7 +136,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//出力ウィンドウへの文字出力
 	OutputDebugStringA("Hello,DirectX!\n");
 
-	
+	OutputDebugStringW(L"文字列リテラルを出力するよ\n");
+
+	std::wstring a(L"stringに埋め込んだ文字列を出力するよ\n");
+	OutputDebugStringW(a.c_str());
+
 
 #ifdef DEBUG
 	//debugController->Relese();
