@@ -38,7 +38,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize(textureHandle_[0], spritePlatform_);
-	
+	sprite_->SetPosition({ 100.0f, 100.0f });
+
 	/*
 	for (uint32_t i = 0; i < 5; ++i) {
 		std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
@@ -127,8 +128,15 @@ void GameScene::Update() {
 	ImGui::RadioButton("BlendModeMultiply", &blendMode, static_cast<int>(BlendMode::kBlendModeMultiply));
 	ImGui::RadioButton("BlendModeScreen", &blendMode, static_cast<int>(BlendMode::kBlendModeScreen));
 	*/
-	
+
 	//ImGui::Checkbox("useMonsterBall", &useMonaterBall);
+	ImGui::End();
+
+	ImGui::Begin("imgui");
+
+	ImGui::SetWindowSize({500.0f, 100.0f});
+	ImGui::SliderFloat2("tranlate", &sprite_->GetPosition().x, 0.0f, 1280.0f, "%4.1f");
+
 	ImGui::End();
 
 }
@@ -162,6 +170,6 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 		sprite->Draw();
 	}
 	*/
-	//sprite_->Draw();
+	sprite_->Draw();
 
 }
