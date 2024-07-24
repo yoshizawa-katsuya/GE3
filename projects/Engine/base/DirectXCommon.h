@@ -54,6 +54,8 @@ public:
 
 	IDxcIncludeHandler* GetIncludeHandler() const { return includeHandler_.Get(); }
 
+	uint32_t GetBackBufferCount() const { return backBuffers; }
+
 	/// <summary>
 	/// RTVの指定番号のCPUデスクリプタハンドルを取得
 	/// </summary>
@@ -148,6 +150,7 @@ private:
 	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_ = nullptr;
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_ = nullptr;
 
+	uint32_t backBuffers = 2;
 
 	uint32_t descriptorSizeRTV_;
 	uint32_t descriptorSizeDSV_;

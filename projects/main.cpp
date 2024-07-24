@@ -79,10 +79,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 
 		//imGuiに、フレームが始まる旨を伝える
-		ImGui_ImplDX12_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-
+		imGuiManager->Begin();
+		
 		//入力の更新
 		input->Update();
 
@@ -90,20 +88,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//ゲームの処理
 		gameScene->Update();
 
-		
-
+		//ImGuiの内部コマンドを生成する
+		imGuiManager->End();
 		
 		//描画開始
 		dxCommon->PreDraw();
 
 		srvHeapManager->PreDraw();
-		
-		//ImGuiの内部コマンドを生成する
-		ImGui::Render();
-
-		
-		
-		
 		
 		//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 		primitiveDrawer->SetPipelineSet(dxCommon->GetCommandList(), BlendMode::kBlendModeNone);
@@ -117,21 +108,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 		gameScene->Draw(primitiveDrawer);
-
-		
 		
 		//実際のcommandListのImGuiの描画コマンドを積む
-		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon->GetCommandList());
-
+		imGuiManager->Draw();
+		
 		dxCommon->PostDraw();
 
 	}
 
 	
 	//ImGuiの終了処理
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	imGuiManager->Finalize();
+	
 
 	//出力ウィンドウへの文字出力
 	OutputDebugStringA("Hello,DirectX!\n");
