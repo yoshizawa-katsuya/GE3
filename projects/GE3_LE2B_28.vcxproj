@@ -102,7 +102,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Engine\3d\Camera.cpp" />
     <ClCompile Include="Engine\base\D3DResourceLeakChecker.cpp" />
     <ClCompile Include="Engine\3d\DirectionalLight.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
@@ -116,7 +116,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\lib\dx12.cpp" />
     <ClCompile Include="Game\scene\GameScene.cpp" />
     <ClCompile Include="Engine\input\Input.cpp" />
-    <ClCompile Include="ImGuiManager.cpp" />
+    <ClCompile Include="Engine\base\ImGuiManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\lib\Matrix.cpp" />
     <ClCompile Include="Engine\lib\Vector.cpp" />
@@ -128,10 +128,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\objects\Player.cpp" />
     <ClCompile Include="Engine\3d\ModelPlatform.cpp" />
     <ClCompile Include="Engine\2d\SpritePlatform.cpp" />
-    <ClCompile Include="Object3d.cpp" />
-    <ClCompile Include="ParticleEmitter.cpp" />
-    <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="SrvHeapManager.cpp" />
+    <ClCompile Include="Game\objects\Object3d.cpp" />
+    <ClCompile Include="Engine\3d\ParticleEmitter.cpp" />
+    <ClCompile Include="Engine\3d\ParticleManager.cpp" />
+    <ClCompile Include="Engine\base\SrvHeapManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -152,7 +152,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Engine\3d\Camera.h" />
     <ClInclude Include="Engine\base\D3DResourceLeakChecker.h" />
     <ClInclude Include="Engine\3d\DirectionalLight.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
@@ -178,11 +178,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\input\Input.h" />
     <ClInclude Include="Engine\3d\ModelPlatform.h" />
     <ClInclude Include="Engine\2d\SpritePlatform.h" />
-    <ClInclude Include="ImGuiManager.h" />
-    <ClInclude Include="Object3d.h" />
-    <ClInclude Include="ParticleEmitter.h" />
-    <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="SrvHeapManager.h" />
+    <ClInclude Include="Engine\base\ImGuiManager.h" />
+    <ClInclude Include="Game\objects\Object3d.h" />
+    <ClInclude Include="Engine\3d\ParticleEmitter.h" />
+    <ClInclude Include="Engine\base\ParticleManager.h" />
+    <ClInclude Include="Engine\base\SrvHeapManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\externals\imgui\LICENSE.txt" />
