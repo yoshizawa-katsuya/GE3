@@ -36,6 +36,10 @@ public:
 	void SetNearClip(float nearClip) { nearClip_ = nearClip; }
 	void SetFarClip(float farClip) { farClip_ = farClip; }
 
+	void SetWorldMatrix(const Matrix4x4& worldmatrix) { worldMatrix_ = worldmatrix; }
+	void SetViewMatrix(const Matrix4x4& viewmatrix) { viewMatrix_ = viewmatrix; }
+	void SetviewProjection(const Matrix4x4& viewProjectionMatrix) { viewProjectionMatrix_ = viewProjectionMatrix; }
+
 private:
 
 	//カメラの変数

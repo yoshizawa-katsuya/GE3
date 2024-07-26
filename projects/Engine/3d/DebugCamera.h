@@ -14,10 +14,14 @@ public:
 	//更新
 	void Update();
 
+	void ViewMatrixUpdate();
+
 private:
 
 	Camera* camera_;
 	Input* input_;
+
+	Matrix4x4 matRot_;
 
 	Vector3 target_ = { 0.0f, 0.0f, 10.0f };
 

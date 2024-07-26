@@ -10,6 +10,8 @@ void DebugCamera::Initialize(Camera* camera, Input* input)
 	camera_ = camera;
 	input_ = input;
 
+	matRot_ = MakeIdentity4x4();
+
 }
 
 void DebugCamera::Update()
@@ -47,10 +49,18 @@ void DebugCamera::Update()
 		move.x *= mousevelocity.y;
 		move.y *= mousevelocity.x;
 		
-		camera_->SetRotateX(camera_->GetRotate().x + move.x);
-		camera_->SetRotateY(camera_->GetRotate().y + move.y);
+		//camera_->SetRotateX(camera_->GetRotate().x + move.x);
+		//camera_->SetRotateY(camera_->GetRotate().y + move.y);
+
+		Matrix4x4 matRotDelta = MakeIdentity4x4();
+		matRotDelta = matRotDelta * MakeRotateXMatrix(move.x);
+		matRotDelta = matRotDelta * MakeRotateYMatrix(move.y);
+
+		//累積の回転行列を合成
+		matRot_ = matRotDelta * matRot_;
 
 		camera_->Update();
+		ViewMatrixUpdate();
 
 		Vector3 offset = { 0.0f, 0.0f, -10.0f };
 
@@ -78,5 +88,18 @@ void DebugCamera::Update()
 	}
 
 	camera_->Update();
+	ViewMatrixUpdate();
+}
+
+void DebugCamera::ViewMatrixUpdate()
+{
+
+	Matrix4x4 worldmatrix = Multiply(matRot_, MakeTranslateMatrix(camera_->GetTranslate()));
+	camera_->SetWorldMatrix(worldmatrix);
+
+	Matrix4x4 viewMatrix = Inverse(worldmatrix);
+	camera_->SetViewMatrix(Inverse(viewMatrix));
+
+	camera_->SetviewProjection(Multiply(viewMatrix, camera_->GetProjection()));
 
 }
