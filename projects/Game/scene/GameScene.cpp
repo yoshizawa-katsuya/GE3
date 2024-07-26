@@ -10,10 +10,11 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio) {
+void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio, Input* input) {
 
 	dxCommon_ = dxCommon;
 	audio_ = audio;
+	input_ = input;
 	spritePlatform_ = spritePlatform;
 	modelPlatform_ = modelPlatform;
 
@@ -138,6 +139,13 @@ void GameScene::Update() {
 
 	//ImGui::Checkbox("useMonsterBall", &useMonaterBall);
 	ImGui::End();
+
+	if (input_->PushKey(DIK_0)) {
+		OutputDebugStringA("Hit 0\n");
+	}
+	if (input_->TriggerKey(DIK_1)) {
+		OutputDebugStringA("Hit 1\n");
+	}
 
 }
 

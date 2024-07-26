@@ -4,6 +4,7 @@
 #include "Struct.h"
 #include "DirectXCommon.h"
 #include "Audio.h"
+#include "Input.h"
 #include "TextureManager.h"
 #include "ModelPlatform.h"
 #include "SpritePlatform.h"
@@ -21,7 +22,7 @@ public:
 
 	~GameScene();
 
-	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio);
+	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio, Input* input);
 
 	void Update();
 
@@ -35,6 +36,7 @@ private:
 	DirectXCommon* dxCommon_;
 
 	Audio* audio_;
+	Input* input_;
 
 	SpritePlatform* spritePlatform_;
 	ModelPlatform* modelPlatform_;

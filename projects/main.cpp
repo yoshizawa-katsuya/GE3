@@ -70,7 +70,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene;
-	gameScene->Initialize(dxCommon, spritePlatform, modelPlatform, audio);
+	gameScene->Initialize(dxCommon, spritePlatform, modelPlatform, audio, input);
 
 	
 	
