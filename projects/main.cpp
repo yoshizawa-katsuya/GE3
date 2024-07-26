@@ -1,5 +1,6 @@
 #include "WinApp.h"
 #include "DirectXCommon.h"
+#include "Audio.h"
 #include "SrvHeapManager.h"
 #include "ImGuiManager.h"
 #include "TextureManager.h"
@@ -34,6 +35,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	DirectXCommon* dxCommon = new DirectXCommon;
 	dxCommon->Initialize(winApp);
 
+	//Audio初期化
+	Audio* audio = new Audio;
+	audio->Initialize();
+
 	//SrvHeapManager初期化
 	SrvHeapManager* srvHeapManager = new SrvHeapManager;
 	srvHeapManager->Initialize(dxCommon);
@@ -65,7 +70,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//ゲームシーンの初期化
 	GameScene* gameScene = new GameScene;
-	gameScene->Initialize(dxCommon, spritePlatform, modelPlatform);
+	gameScene->Initialize(dxCommon, spritePlatform, modelPlatform, audio);
 
 	
 	
@@ -162,6 +167,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	delete srvHeapManager;
 	srvHeapManager = nullptr;
+
+	delete audio;
+	audio = nullptr;
 
 	delete dxCommon;
 	dxCommon = nullptr;

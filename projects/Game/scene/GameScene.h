@@ -3,6 +3,7 @@
 #include <memory>
 #include "Struct.h"
 #include "DirectXCommon.h"
+#include "Audio.h"
 #include "TextureManager.h"
 #include "ModelPlatform.h"
 #include "SpritePlatform.h"
@@ -20,7 +21,7 @@ public:
 
 	~GameScene();
 
-	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform);
+	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio);
 
 	void Update();
 
@@ -33,6 +34,8 @@ private:
 	//デバイス
 	DirectXCommon* dxCommon_;
 
+	Audio* audio_;
+
 	SpritePlatform* spritePlatform_;
 	ModelPlatform* modelPlatform_;
 
@@ -41,6 +44,8 @@ private:
 	std::unique_ptr<Camera> camera_;
 
 	uint32_t textureHandle_[2];
+
+	SoundData soundData1_;
 
 	//平行光源
 	std::unique_ptr<DirectionalLight> directionalLight_;

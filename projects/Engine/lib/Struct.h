@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <xaudio2.h>
 
 //static const int kRowHeight = 20;
 //static const int kColumnWidth = 60;
@@ -133,4 +134,37 @@ struct ParticleForGPU {
 struct AccelerationField {
 	Vector3 accerelation;	//加速度
 	AABB area;	//範囲
+};
+
+//チャンクヘッダ
+struct ChunkHeader
+{
+	char id[4];	//チャンクごとのID
+	int32_t size;	//チャンクサイズ
+};
+
+//RIFFヘッダチャンク
+struct RiffHeader
+{
+	ChunkHeader chunk;	//"RIFF"
+	char type[4];	//"WAVE"
+};
+
+
+//FMTチャンク
+struct FormatChunk
+{
+	ChunkHeader chunk;	//"fmt"
+	WAVEFORMATEX fmt;	//波形フォーマット
+};
+
+//音声データ
+struct SoundData
+{
+	//波形フォーマット
+	WAVEFORMATEX wfex;
+	//バッファの先頭アドレス
+	BYTE* pBuffer;
+	//バッファのサイズ
+	unsigned int bufferSize;
 };

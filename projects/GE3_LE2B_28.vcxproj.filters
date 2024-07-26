@@ -64,6 +64,12 @@
     <Filter Include="リソース ファイル\shader">
       <UniqueIdentifier>{0efeb8c7-ba96-4736-b6bb-bc70fc08273b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\audio">
+      <UniqueIdentifier>{19dc6b97-dd4f-4bd7-95bf-2f75c0b3af44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\audio">
+      <UniqueIdentifier>{bc075b9d-899e-4e1d-aa5b-33d8048ea46a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -134,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3d\ParticleEmitter.cpp">
       <Filter>ソース ファイル\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\audio\Audio.cpp">
+      <Filter>ソース ファイル\audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +228,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\ParticleEmitter.h">
       <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\audio\Audio.h">
+      <Filter>ヘッダー ファイル\audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

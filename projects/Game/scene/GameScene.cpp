@@ -10,9 +10,10 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform) {
+void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio) {
 
 	dxCommon_ = dxCommon;
+	audio_ = audio;
 	spritePlatform_ = spritePlatform;
 	modelPlatform_ = modelPlatform;
 
@@ -27,6 +28,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 
 	textureHandle_[0] = TextureManager::GetInstance()->Load("./resources/uvChecker.png");
 	textureHandle_[1] = TextureManager::GetInstance()->Load("./resources/monsterBall.png");
+
+	soundData1_ = audio_->SoundLoadWave("./resources/Alarm01.wav");
 
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelPlatform_);
@@ -120,6 +123,10 @@ void GameScene::Update() {
 
 		ImGui::TreePop();
 	}
+
+	if (ImGui::Button("SE01")) {
+		audio_->SoundPlawWave(soundData1_);
+	}
 	/*
 	ImGui::RadioButton("BlendModeNone", &blendMode, static_cast<int>(BlendMode::kBlendModeNone));
 	ImGui::RadioButton("BlendModeNormal", &blendMode, static_cast<int>(BlendMode::kBlendModeNormal));
@@ -130,13 +137,6 @@ void GameScene::Update() {
 	*/
 
 	//ImGui::Checkbox("useMonsterBall", &useMonaterBall);
-	ImGui::End();
-
-	ImGui::Begin("imgui");
-
-	ImGui::SetWindowSize({500.0f, 100.0f});
-	ImGui::SliderFloat2("tranlate", &sprite_->GetPosition().x, 0.0f, 1280.0f, "%4.1f");
-
 	ImGui::End();
 
 }
