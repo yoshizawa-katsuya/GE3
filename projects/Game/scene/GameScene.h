@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Object3d.h"
 #include "Camera.h"
+#include "DebugCamera.h"
 #include "ParticleEmitter.h"
 
 class GameScene
@@ -43,7 +44,14 @@ private:
 
 	int blendMode = static_cast<int>(BlendMode::kBlendModeNone);
 
+	Camera* mainCamera_ = nullptr;
+
 	std::unique_ptr<Camera> camera_;
+	std::unique_ptr<Camera> camera2_;
+
+	std::unique_ptr<DebugCamera> debugCamera_;
+
+	bool isActiveDebugCamera_ = false;
 
 	uint32_t textureHandle_[2];
 

@@ -46,6 +46,9 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 //座標変換
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
+//回転とスケールのみの座標変換
+Vector3 TransformNormal(const Vector3& vector, const Matrix4x4& matrix);
+
 //void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
 
 //X軸回転行列

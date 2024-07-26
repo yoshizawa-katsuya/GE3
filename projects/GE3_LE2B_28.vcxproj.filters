@@ -144,6 +144,9 @@
     <ClCompile Include="Engine\audio\Audio.cpp">
       <Filter>ソース ファイル\audio</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3d\DebugCamera.cpp">
+      <Filter>ソース ファイル\3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -231,6 +234,9 @@
     </ClInclude>
     <ClInclude Include="Engine\audio\Audio.h">
       <Filter>ヘッダー ファイル\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3d\DebugCamera.h">
+      <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

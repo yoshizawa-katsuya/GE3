@@ -25,7 +25,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 
 	camera_ = std::make_unique<Camera>();
 	camera_->SetRotate({ 0.3f, 0.0f, 0.0f });
-	camera_->SetTransform({ 0.0f, 3.0f, -10.0f });
+	camera_->SetTranslate({ 0.0f, 3.0f, -10.0f });
+
+	camera2_ = std::make_unique<Camera>();
+
+	debugCamera_ = std::make_unique<DebugCamera>();
+	debugCamera_->Initialize(camera2_.get(), input_);
+
+	mainCamera_ = camera_.get();
 
 	textureHandle_[0] = TextureManager::GetInstance()->Load("./resources/uvChecker.png");
 	textureHandle_[1] = TextureManager::GetInstance()->Load("./resources/monsterBall.png");
@@ -60,11 +67,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatfo
 	*/
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
-	player_->Initialize(model_.get(), camera_.get());
+	player_->Initialize(model_.get(), mainCamera_);
 
 	//3dオブジェクトの初期化
 	object3d_ = std::make_unique<Object3d>();
-	object3d_->Initialize(modelAxis_.get(), camera_.get());
+	object3d_->Initialize(modelAxis_.get(), mainCamera_);
 
 	emitter_ = std::make_unique<ParticleEmitter>("circle", 3, 0.5f);
 	emitter_->Initialize(textureHandle_[0]);
@@ -75,6 +82,8 @@ void GameScene::Update() {
 
 	camera_->Update();
 
+	debugCamera_->Update();
+
 	//プレイヤーの更新
 	player_->Update();
 
@@ -83,7 +92,7 @@ void GameScene::Update() {
 
 	emitter_->Update();
 
-	ParticleManager::GetInstance()->Update(camera_.get());
+	ParticleManager::GetInstance()->Update(mainCamera_);
 
 	ImGui::Begin("Window");
 	
@@ -116,7 +125,13 @@ void GameScene::Update() {
 
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("camera2")) {
+		ImGui::DragFloat3("translate", &camera2_->GetTranslate().x, 0.01f);
+		ImGui::DragFloat3("rotate", &camera2_->GetRotate().x, 0.01f);
+		//ImGui::DragFloat3("scale", &cameratransform.scale.x, 0.01f);
 
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("directionalLight")) {
 		ImGui::ColorEdit4("color", &directionalLight_->GetColor().x);
 		ImGui::DragFloat3("direction", &directionalLight_->GetDirection().x, 0.01f);
@@ -127,6 +142,24 @@ void GameScene::Update() {
 
 	if (ImGui::Button("SE01")) {
 		audio_->SoundPlawWave(soundData1_);
+	}
+
+	if (ImGui::RadioButton("gameCamera", !isActiveDebugCamera_)) {
+		isActiveDebugCamera_ = false;
+
+		mainCamera_ = camera_.get();
+
+		player_->SetCamera(mainCamera_);
+		object3d_->SetCamera(mainCamera_);
+
+	}
+	if (ImGui::RadioButton("DebugCamera", isActiveDebugCamera_)) {
+		isActiveDebugCamera_ = true;
+
+		mainCamera_ = camera2_.get();
+
+		player_->SetCamera(mainCamera_);
+		object3d_->SetCamera(mainCamera_);
 	}
 	/*
 	ImGui::RadioButton("BlendModeNone", &blendMode, static_cast<int>(BlendMode::kBlendModeNone));
@@ -159,11 +192,11 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 	//Modelの描画前処理
 	modelPlatform_->PreDraw();
 	//プレイヤーの描画
-	//player_->Draw();
+	player_->Draw();
 	//3dオブジェクトの描画
-	//object3d_->Draw();
+	object3d_->Draw();
 
-	ParticleManager::GetInstance()->Draw();
+	//ParticleManager::GetInstance()->Draw();
 
 	//modelの描画
 	//model_->Draw(commandList);
@@ -178,6 +211,6 @@ void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
 		sprite->Draw();
 	}
 	*/
-	sprite_->Draw();
+	//sprite_->Draw();
 
 }

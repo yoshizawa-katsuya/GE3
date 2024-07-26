@@ -23,6 +23,16 @@ void Input::Initialize(WinApp* winApp)
 	result = keyboard_->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
+	//マウスデバイスの作成
+	result = directInput_->CreateDevice(GUID_SysMouse, &mouse_, NULL);
+	assert(SUCCEEDED(result));
+	//入力データ系列のセット
+	result = mouse_->SetDataFormat(&c_dfDIMouse);
+	assert(SUCCEEDED(result));
+	//排他制御レベルのセット
+	result = mouse_->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	assert(SUCCEEDED(result));
+
 }
 
 void Input::Update()
@@ -35,6 +45,11 @@ void Input::Update()
 	keyboard_->Acquire();
 	//全キーの入力情報を取得する
 	keyboard_->GetDeviceState(sizeof(key_), key_);
+
+	preMouseState_ = mouseState_;
+
+	mouse_->Acquire();
+	mouse_->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState_);
 
 }
 
@@ -56,4 +71,40 @@ bool Input::TriggerKey(BYTE keyNumber)
 	}
 	//そうでなければfalseを返す
 	return false;
+}
+
+bool Input::PushMouseLeft()
+{
+	if (mouseState_.rgbButtons[0] & 0x80) {
+		return true;
+	}
+	return false;
+}
+
+bool Input::TrigerMouseLeft()
+{
+	if (!(preMouseState_.rgbButtons[0] & 0x80) && mouseState_.rgbButtons[0] & 0x80) {
+		return true;
+	}
+	return false;
+}
+
+bool Input::PushMouseCenter()
+{
+	if (mouseState_.rgbButtons[2] & 0x80) {
+		return true;
+	}
+	return false;
+}
+
+float Input::GetMouseWheel()
+{
+	return (float)mouseState_.lZ;
+}
+
+Vector2 Input::GetMouseVelocity()
+{
+
+	return Vector2((float)mouseState_.lX, (float)mouseState_.lY);
+
 }

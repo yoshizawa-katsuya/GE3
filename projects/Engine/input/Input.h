@@ -4,6 +4,7 @@
 #define DIRECTINPUT_VERSION		0x0800	//DirectInputのバージョン指定
 #include <dinput.h>
 #include "WinApp.h"
+#include "Struct.h"
 
 using namespace Microsoft::WRL;
 
@@ -32,17 +33,31 @@ public:
 	/// <returns>トリガーか</returns>
 	bool TriggerKey(BYTE keyNumber);
 
+	bool PushMouseLeft();
+
+	bool TrigerMouseLeft();
+
+	bool PushMouseCenter();
+
+	float GetMouseWheel();
+
+	Vector2 GetMouseVelocity();
+
 private:
 
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;
 
 	ComPtr<IDirectInputDevice8> keyboard_;
+	ComPtr<IDirectInputDevice8> mouse_;
 	ComPtr<IDirectInput8> directInput_ = nullptr;
 	//全キーの入力情報
 	BYTE key_[256] = {};
 	//前回の全キーの入力情報
 	BYTE keyPre_[256] = {};
+
+	DIMOUSESTATE mouseState_;
+	DIMOUSESTATE preMouseState_;
 
 };
 
