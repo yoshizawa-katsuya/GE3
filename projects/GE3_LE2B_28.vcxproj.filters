@@ -70,6 +70,12 @@
     <Filter Include="ソース ファイル\audio">
       <UniqueIdentifier>{bc075b9d-899e-4e1d-aa5b-33d8048ea46a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\myGame">
+      <UniqueIdentifier>{15938fc7-0288-4f39-b8fc-11bea30fda65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\myGame">
+      <UniqueIdentifier>{b57f4e00-fd0e-4231-8414-f893d017e1a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -146,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Engine\3d\DebugCamera.cpp">
       <Filter>ソース ファイル\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\myGame\MyGame.cpp">
+      <Filter>ソース ファイル\myGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -237,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3d\DebugCamera.h">
       <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\myGame\MyGame.h">
+      <Filter>ヘッダー ファイル\myGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
