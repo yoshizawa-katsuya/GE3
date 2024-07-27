@@ -130,6 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\ParticleManager.cpp" />
     <ClCompile Include="Engine\base\SrvHeapManager.cpp" />
     <ClCompile Include="Game\myGame\MyGame.cpp" />
+    <ClCompile Include="Engine\base\YKFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -176,6 +177,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\ParticleManager.h" />
     <ClInclude Include="Engine\base\SrvHeapManager.h" />
     <ClInclude Include="Game\myGame\MyGame.h" />
+    <ClInclude Include="Engine\base\YKFramework.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\externals\imgui\LICENSE.txt" />

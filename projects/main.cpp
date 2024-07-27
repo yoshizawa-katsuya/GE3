@@ -1,30 +1,15 @@
 #include "MyGame.h"
-
+#include "YKFramework.h"
 
 
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	MyGame game;
+	YKFramework* game = new MyGame();
 
-	game.Initialize();
-	
-	
-	//ウィンドウのxボタンが押されるまでループ
-	while (true) {
-		
-		game.Update();
+	game->Run();
 
-		if (game.GetIsEndReqest()) {
-			break;
-		}
-		
-		game.Draw();
-	}
-
-	game.Finalize();
-
-	
+	delete game;
 	
 
 	//出力ウィンドウへの文字出力
