@@ -9,6 +9,12 @@ class Audio
 {
 public:
 
+	//シングルトンインスタンスの取得
+	static Audio* GetInstance();
+
+	//終了
+	void Finalize();
+
 	//初期化
 	void Initialize();
 
@@ -21,6 +27,13 @@ public:
 	void SoundUnload(SoundData* soundData);
 
 private:
+
+	static Audio* instance_;
+
+	Audio() = default;
+	~Audio() = default;
+	Audio(Audio&) = default;
+	Audio& operator=(Audio&) = default;
 
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2_;
 	IXAudio2MasteringVoice* masterVoice_;

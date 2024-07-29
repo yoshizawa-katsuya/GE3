@@ -26,8 +26,6 @@ void TextureManager::Initialize(DirectXCommon* dxCommon, SrvHeapManager* srvHeap
 	dxCommon_ = dxCommon;
 	srvHeapManager_ = srvHeapManager;
 	
-	index_ = 0;
-
 	
 	//全テクスチャリセット
 	//ResetAll();

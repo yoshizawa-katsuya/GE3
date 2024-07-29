@@ -13,6 +13,12 @@ class Input
 {
 public:
 	
+	//シングルトンインスタンスの取得
+	static Input* GetInstance();
+
+	//終了
+	void Finalize();
+
 	//初期化
 	void Initialize(WinApp* winApp);
 
@@ -44,6 +50,13 @@ public:
 	Vector2 GetMouseVelocity();
 
 private:
+
+	static Input* instance_;
+
+	Input() = default;
+	~Input() = default;
+	Input(Input&) = default;
+	Input& operator=(Input&) = default;
 
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;

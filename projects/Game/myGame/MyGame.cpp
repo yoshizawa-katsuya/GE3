@@ -8,7 +8,7 @@ void MyGame::Initialize()
 
 	//ゲームシーンの初期化
 	gameScene_ = new GameScene;
-	gameScene_->Initialize(dxCommon_, spritePlatform_, modelPlatform_, audio_, input_);
+	gameScene_->Initialize();
 
 
 }
@@ -57,7 +57,7 @@ void MyGame::Draw()
 	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-	gameScene_->Draw(primitiveDrawer_);
+	gameScene_->Draw();
 
 	//実際のcommandListのImGuiの描画コマンドを積む
 	imGuiManager_->Draw();

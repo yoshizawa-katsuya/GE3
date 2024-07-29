@@ -1,5 +1,21 @@
 #include "ModelPlatform.h"
 
+ModelPlatform* ModelPlatform::instance_ = nullptr;
+
+ModelPlatform* ModelPlatform::GetInstance()
+{
+	if (instance_ == nullptr) {
+		instance_ = new ModelPlatform;
+	}
+	return instance_;
+}
+
+void ModelPlatform::Finalize()
+{
+	delete instance_;
+	instance_ = nullptr;
+}
+
 void ModelPlatform::Initialize(DirectXCommon* dxCommon, PrimitiveDrawer* primitiveDrawer)
 {
 

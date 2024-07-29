@@ -11,6 +11,23 @@
 
 using namespace Microsoft::WRL;
 
+DirectXCommon* DirectXCommon::instance_ = nullptr;
+
+
+DirectXCommon* DirectXCommon::GetInstance()
+{
+	if (instance_ == nullptr) {
+		instance_ = new DirectXCommon;
+	}
+	return instance_;
+}
+
+void DirectXCommon::Finalize()
+{
+	delete instance_;
+	instance_ = nullptr;
+}
+
 void DirectXCommon::Initialize(WinApp* winApp) {
 
 	//nullptrチェック

@@ -48,10 +48,10 @@ private:
 	TextureManager(TextureManager&) = default;
 	TextureManager& operator=(TextureManager&) = default;
 
-	DirectXCommon* dxCommon_;
-	SrvHeapManager* srvHeapManager_;
+	DirectXCommon* dxCommon_ = nullptr;
+	SrvHeapManager* srvHeapManager_ = nullptr;
 
-	uint32_t index_;
+	uint32_t index_ = 0;
 
 	
 

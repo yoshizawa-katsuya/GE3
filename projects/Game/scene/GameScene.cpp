@@ -10,13 +10,13 @@ GameScene::~GameScene() {
 
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio, Input* input) {
+void GameScene::Initialize() {
 
-	dxCommon_ = dxCommon;
-	audio_ = audio;
-	input_ = input;
-	spritePlatform_ = spritePlatform;
-	modelPlatform_ = modelPlatform;
+	dxCommon_ = DirectXCommon::GetInstance();
+	audio_ = Audio::GetInstance();
+	input_ = Input::GetInstance();
+	spritePlatform_ = SpritePlatform::GetInstance();
+	modelPlatform_ = ModelPlatform::GetInstance();
 
 	directionalLight_ = std::make_unique<DirectionalLight>();
 	directionalLight_->Initialize(dxCommon_);
@@ -184,7 +184,7 @@ void GameScene::Update() {
 
 }
 
-void GameScene::Draw(PrimitiveDrawer* primitiveDrawer) {
+void GameScene::Draw() {
 
 	//primitiveDrawer->SetPipelineSet(dxCommon_->GetCommandList(), static_cast<BlendMode>(blendMode));
 

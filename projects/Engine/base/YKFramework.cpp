@@ -7,11 +7,11 @@ void YKFramework::Initialize()
 	winApp_->Initialize();
 
 	// DirectX初期化
-	dxCommon_ = new DirectXCommon;
+	dxCommon_ = DirectXCommon::GetInstance();
 	dxCommon_->Initialize(winApp_);
 
 	//Audio初期化
-	audio_ = new Audio;
+	audio_ = Audio::GetInstance();;
 	audio_->Initialize();
 
 	//SrvHeapManager初期化
@@ -22,7 +22,7 @@ void YKFramework::Initialize()
 	imGuiManager_->Initialize(dxCommon_, winApp_, srvHeapManager_);
 
 	//入力の初期化
-	input_ = new Input;
+	input_ = Input::GetInstance();
 	input_->Initialize(winApp_);
 
 	//TextureManager初期化
@@ -33,14 +33,14 @@ void YKFramework::Initialize()
 	primitiveDrawer_->Initialize(dxCommon_);
 
 	//スプライト共通部の初期化
-	spritePlatform_ = new SpritePlatform;
+	spritePlatform_ = SpritePlatform::GetInstance();
 	spritePlatform_->Initialize(dxCommon_, primitiveDrawer_);
 
 	//ParticleManagerの初期化
 	ParticleManager::GetInstance()->Initialize(dxCommon_, srvHeapManager_, primitiveDrawer_);
 
 	//3Dオブジェクト共通部の初期化
-	modelPlatform_ = new ModelPlatform;
+	modelPlatform_ = ModelPlatform::GetInstance();
 	modelPlatform_->Initialize(dxCommon_, primitiveDrawer_);
 
 }
@@ -52,11 +52,9 @@ void YKFramework::Finalize()
 
 	winApp_->TerminateGameWindow();
 
-	delete modelPlatform_;
-	modelPlatform_ = nullptr;
+	modelPlatform_->Finalize();
 
-	delete spritePlatform_;
-	spritePlatform_ = nullptr;
+	spritePlatform_->Finalize();
 
 	ParticleManager::GetInstance()->Finalize();
 
@@ -66,8 +64,7 @@ void YKFramework::Finalize()
 	TextureManager::GetInstance()->Finalize();
 
 	//入力開放
-	delete input_;
-	input_ = nullptr;
+	input_->Finalize();
 
 	delete imGuiManager_;
 	imGuiManager_ = nullptr;
@@ -75,11 +72,9 @@ void YKFramework::Finalize()
 	delete srvHeapManager_;
 	srvHeapManager_ = nullptr;
 
-	delete audio_;
-	audio_ = nullptr;
+	audio_->Finalize();
 
-	delete dxCommon_;
-	dxCommon_ = nullptr;
+	dxCommon_->Finalize();
 
 	//WindowsAPI解放
 	delete winApp_;

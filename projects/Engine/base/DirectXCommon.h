@@ -16,6 +16,12 @@ class DirectXCommon
 {
 public:
 
+	//シングルトンインスタンスの取得
+	static DirectXCommon* GetInstance();
+
+	//終了
+	void Finalize();
+
 	//初期化
 	void Initialize(WinApp* winApp);
 
@@ -80,6 +86,13 @@ public:
 
 	
 private:
+
+	static DirectXCommon* instance_;
+
+	DirectXCommon() = default;
+	~DirectXCommon() = default;
+	DirectXCommon(DirectXCommon&) = default;
+	DirectXCommon& operator=(DirectXCommon&) = default;
 
 	//DXGIデバイス初期化
 	void InitializeDXGIDevice();

@@ -23,11 +23,11 @@ public:
 
 	~GameScene();
 
-	void Initialize(DirectXCommon* dxCommon, SpritePlatform* spritePlatform, ModelPlatform* modelPlatform, Audio* audio, Input* input);
+	void Initialize();
 
 	void Update();
 
-	void Draw(PrimitiveDrawer* primitiveDrawer);
+	void Draw();
 
 private:
 
