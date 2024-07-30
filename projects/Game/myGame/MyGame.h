@@ -24,8 +24,7 @@ public:
 private:
 
 	
-	GameScene* gameScene_ = nullptr;
-	TitleScene* titleScene_ = nullptr;
+	
 	
 };
 

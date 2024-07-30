@@ -216,3 +216,8 @@ void GameScene::Draw() {
 	//sprite_->Draw();
 
 }
+
+void GameScene::Finalize()
+{
+
+}

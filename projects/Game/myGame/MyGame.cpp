@@ -10,8 +10,10 @@ void MyGame::Initialize()
 	//gameScene_ = new GameScene;
 	//gameScene_->Initialize();
 
-	titleScene_ = new TitleScene;
-	titleScene_->Initialize();
+	//最初のシーンの生成
+	BaseScene* scene = new TitleScene();
+	//シーンマネージャに最初にシーンをセット
+	sceneManager_->SetNextScene(scene);
 
 
 }
@@ -24,8 +26,6 @@ void MyGame::Finalize()
 	//delete gameScene_;
 	//gameScene_ = nullptr;
 
-	delete titleScene_;
-	titleScene_ = nullptr;
 
 	YKFramework::Finalize();
 
@@ -40,7 +40,6 @@ void MyGame::Update()
 	//ゲームの処理
 	//gameScene_->Update();
 
-	titleScene_->Update();
 
 	YKFramework::EndFrame();
 
@@ -66,8 +65,8 @@ void MyGame::Draw()
 
 
 	//gameScene_->Draw();
-
-	titleScene_->Draw();
+	//titleScene_->Draw();
+	sceneManager_->Draw();
 
 	//実際のcommandListのImGuiの描画コマンドを積む
 	imGuiManager_->Draw();

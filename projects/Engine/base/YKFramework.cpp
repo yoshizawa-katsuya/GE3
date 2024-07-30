@@ -43,7 +43,8 @@ void YKFramework::Initialize()
 	modelPlatform_ = ModelPlatform::GetInstance();
 	modelPlatform_->Initialize(dxCommon_, primitiveDrawer_);
 
-
+	//シーンマネージャの生成
+	sceneManager_ = SceneManager::GetInstance();
 
 }
 
@@ -53,6 +54,9 @@ void YKFramework::Finalize()
 	imGuiManager_->Finalize();
 
 	winApp_->TerminateGameWindow();
+
+	//シーンマネージャの開放
+	sceneManager_->Finalize();
 
 	modelPlatform_->Finalize();
 
@@ -98,7 +102,8 @@ void YKFramework::Update()
 	//入力の更新
 	input_->Update();
 
-	
+	sceneManager_->Update();
+
 }
 
 void YKFramework::EndFrame()

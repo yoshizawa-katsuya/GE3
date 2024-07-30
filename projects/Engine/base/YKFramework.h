@@ -14,7 +14,7 @@
 #include "Input.h"
 #include "dx12.h"
 #include "D3DResourceLeakChecker.h"
-#include "BaseScene.h"
+#include "SceneManager.h"
 #include <format>
 #include <dxgidebug.h>
 #include <dxcapi.h>
@@ -62,7 +62,7 @@ protected:
 	SpritePlatform* spritePlatform_ = nullptr;
 	ModelPlatform* modelPlatform_ = nullptr;
 
-	BaseScene* baseScene_ = nullptr;
+	SceneManager* sceneManager_ = nullptr;
 
 	//ゲーム終了フラグ
 	bool isEndReqest_ = false;
