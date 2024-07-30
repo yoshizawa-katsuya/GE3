@@ -55,6 +55,9 @@ void YKFramework::Finalize()
 
 	winApp_->TerminateGameWindow();
 
+	//シーンファクトリ解放
+	delete sceneFactory_;
+
 	//シーンマネージャの開放
 	sceneManager_->Finalize();
 

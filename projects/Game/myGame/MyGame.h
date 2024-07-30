@@ -1,6 +1,4 @@
 #pragma once
-#include "GameScene.h"
-#include "TitleScene.h"
 #include "YKFramework.h"
 
 //ゲーム全体

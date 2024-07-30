@@ -134,6 +134,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\YKFramework.cpp" />
     <ClCompile Include="Game\scene\TitleScene.cpp" />
     <ClCompile Include="Engine\scene\SceneManager.cpp" />
+    <ClCompile Include="Game\scene\SceneFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\Object3d.PS.hlsl">
@@ -154,6 +155,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\scene\AbstractSceneFactory.h" />
     <ClInclude Include="Engine\scene\BaseScene.h" />
     <ClInclude Include="Engine\3d\DebugCamera.h" />
     <ClInclude Include="Engine\audio\Audio.h" />
@@ -184,6 +186,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\YKFramework.h" />
     <ClInclude Include="Game\scene\TitleScene.h" />
     <ClInclude Include="Engine\scene\SceneManager.h" />
+    <ClInclude Include="Game\scene\SceneFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Engine\externals\imgui\LICENSE.txt" />

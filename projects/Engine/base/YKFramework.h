@@ -15,6 +15,7 @@
 #include "dx12.h"
 #include "D3DResourceLeakChecker.h"
 #include "SceneManager.h"
+#include "AbstractSceneFactory.h"
 #include <format>
 #include <dxgidebug.h>
 #include <dxcapi.h>
@@ -63,6 +64,9 @@ protected:
 	ModelPlatform* modelPlatform_ = nullptr;
 
 	SceneManager* sceneManager_ = nullptr;
+
+	//シーンファクトリー
+	AbstractSceneFactory* sceneFactory_ = nullptr;
 
 	//ゲーム終了フラグ
 	bool isEndReqest_ = false;

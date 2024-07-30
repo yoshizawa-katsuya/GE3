@@ -1,6 +1,5 @@
 #include "TitleScene.h"
 #include "imgui/imgui.h"
-#include "GameScene.h"
 #include "SceneManager.h"
 
 void TitleScene::Initialize()
@@ -42,10 +41,8 @@ void TitleScene::Update()
 	ImGui::End();
 
 	if (input_->TriggerKey(DIK_RETURN)) {
-		//ゲームプレイシーン(次シーン)を生成
-		BaseScene* scene = new GameScene();
 		//シーン切り替え依頼
-		sceneManager_->SetNextScene(scene);
+		sceneManager_->ChengeScene("GAMEPLAY");
 	}
 
 }
