@@ -7,8 +7,11 @@ void MyGame::Initialize()
 	YKFramework::Initialize();
 
 	//ゲームシーンの初期化
-	gameScene_ = new GameScene;
-	gameScene_->Initialize();
+	//gameScene_ = new GameScene;
+	//gameScene_->Initialize();
+
+	titleScene_ = new TitleScene;
+	titleScene_->Initialize();
 
 
 }
@@ -18,8 +21,11 @@ void MyGame::Finalize()
 
 	
 	//解放処理
-	delete gameScene_;
-	gameScene_ = nullptr;
+	//delete gameScene_;
+	//gameScene_ = nullptr;
+
+	delete titleScene_;
+	titleScene_ = nullptr;
 
 	YKFramework::Finalize();
 
@@ -32,7 +38,9 @@ void MyGame::Update()
 	YKFramework::Update();
 
 	//ゲームの処理
-	gameScene_->Update();
+	//gameScene_->Update();
+
+	titleScene_->Update();
 
 	YKFramework::EndFrame();
 
@@ -57,7 +65,9 @@ void MyGame::Draw()
 	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-	gameScene_->Draw();
+	//gameScene_->Draw();
+
+	titleScene_->Draw();
 
 	//実際のcommandListのImGuiの描画コマンドを積む
 	imGuiManager_->Draw();

@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdlib>
 #include <memory>
+#include "BaseScene.h"
 #include "Struct.h"
 #include "DirectXCommon.h"
 #include "Audio.h"
@@ -17,17 +18,17 @@
 #include "DebugCamera.h"
 #include "ParticleEmitter.h"
 
-class GameScene
+class GameScene : public BaseScene
 {
 public:
 
 	~GameScene();
 
-	void Initialize();
+	void Initialize() override;
 
-	void Update();
+	void Update() override;
 
-	void Draw();
+	void Draw() override;
 
 private:
 

@@ -43,6 +43,8 @@ void YKFramework::Initialize()
 	modelPlatform_ = ModelPlatform::GetInstance();
 	modelPlatform_->Initialize(dxCommon_, primitiveDrawer_);
 
+
+
 }
 
 void YKFramework::Finalize()
