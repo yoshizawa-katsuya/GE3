@@ -90,7 +90,7 @@ void GameScene::Update() {
 	player_->Update();
 
 	//3dオブジェクトの更新
-	object3d_->Update();
+	//object3d_->Update();
 
 	emitter_->Update();
 
@@ -196,7 +196,7 @@ void GameScene::Draw() {
 	//プレイヤーの描画
 	player_->Draw();
 	//3dオブジェクトの描画
-	object3d_->Draw();
+	//object3d_->Draw();
 
 	//ParticleManager::GetInstance()->Draw();
 
@@ -213,7 +213,7 @@ void GameScene::Draw() {
 		sprite->Draw();
 	}
 	*/
-	//sprite_->Draw();
+	sprite_->Draw();
 
 }
 

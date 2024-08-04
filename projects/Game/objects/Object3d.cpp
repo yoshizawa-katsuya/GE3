@@ -13,7 +13,7 @@ void Object3d::Initialize(Model* model, Camera* camera)
 void Object3d::Update()
 {
 	ImGui::Begin("Object3d");
-	if (ImGui::TreeNode("obj")) {
+	if (ImGui::TreeNode("Model")) {
 		ImGui::ColorEdit4("color", &model_->GetMaterialDataAddress().color.x);
 		ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
 		ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
