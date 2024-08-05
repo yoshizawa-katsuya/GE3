@@ -10,10 +10,10 @@ void Object3d::Initialize(Model* model, Camera* camera)
 	transform_.translate.x = 3.0f;
 }
 
-void Object3d::Update()
+void Object3d::Update(const std::string& label)
 {
 	ImGui::Begin("Object3d");
-	if (ImGui::TreeNode("Model")) {
+	if (ImGui::TreeNode(label.c_str())) {
 		ImGui::ColorEdit4("color", &model_->GetMaterialDataAddress().color.x);
 		ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
 		ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);

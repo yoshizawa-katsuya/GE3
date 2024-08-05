@@ -565,8 +565,8 @@ Microsoft::WRL::ComPtr<IDxcBlob> DirectXCommon::CompilerShader(
 	//成功したログを出す
 	Logger::Log(StringUtility::ConvertString(std::format(L"Compile Succeeded, path:{}, prifile:{}\n", filePath, profile)));
 	//もう使わないリソースを解放
-	shaderSource->Release();
-	shaderResult->Release();
+	//shaderSource->Release();
+	//shaderResult->Release();
 	//実行用のバイナリを返却
 	return shaderBlob;
 

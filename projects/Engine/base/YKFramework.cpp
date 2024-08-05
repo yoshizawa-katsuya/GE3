@@ -50,10 +50,7 @@ void YKFramework::Initialize()
 
 void YKFramework::Finalize()
 {
-	//ImGuiの終了処理
-	imGuiManager_->Finalize();
-
-	winApp_->TerminateGameWindow();
+	
 
 	//シーンファクトリ解放
 	delete sceneFactory_;
@@ -75,6 +72,8 @@ void YKFramework::Finalize()
 	//入力開放
 	input_->Finalize();
 
+	//ImGuiの終了処理
+	imGuiManager_->Finalize();
 	delete imGuiManager_;
 	imGuiManager_ = nullptr;
 
@@ -86,6 +85,7 @@ void YKFramework::Finalize()
 	dxCommon_->Finalize();
 
 	//WindowsAPI解放
+	winApp_->TerminateGameWindow();
 	delete winApp_;
 	winApp_ = nullptr;
 }

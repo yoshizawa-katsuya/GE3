@@ -8,7 +8,7 @@ public:
 
 	void Initialize(Model* model, Camera* camera);
 
-	void Update();
+	void Update(const std::string& label);
 
 	void Draw();
 

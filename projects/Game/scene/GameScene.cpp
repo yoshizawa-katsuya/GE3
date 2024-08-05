@@ -45,8 +45,12 @@ void GameScene::Initialize() {
 
 	modelAxis_ = std::make_unique<Model>();
 	modelAxis_->Initialize(modelPlatform_);
-	modelAxis_->CreateFromOBJ("./resources", "axis.obj");
+	modelAxis_->CreateFromOBJ("./resources", "teapot.obj");
 	
+	modelBunny_ = std::make_unique<Model>();
+	modelBunny_->Initialize(modelPlatform_);
+	modelBunny_->CreateFromOBJ("./resources", "bunny.obj");
+
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize(textureHandle_[0], spritePlatform_);
 	sprite_->SetPosition({ 100.0f, 100.0f });
@@ -73,8 +77,11 @@ void GameScene::Initialize() {
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Initialize(modelAxis_.get(), mainCamera_);
 
-	emitter_ = std::make_unique<ParticleEmitter>("circle", 3, 0.5f);
-	emitter_->Initialize(textureHandle_[0]);
+	bunny_ = std::make_unique<Object3d>();
+	bunny_->Initialize(modelBunny_.get(), mainCamera_);
+
+	//emitter_ = std::make_unique<ParticleEmitter>("circle", 3, 0.5f);
+	//emitter_->Initialize(textureHandle_[0]);
 
 }
 
@@ -90,11 +97,13 @@ void GameScene::Update() {
 	player_->Update();
 
 	//3dオブジェクトの更新
-	//object3d_->Update();
+	object3d_->Update("teapot");
 
-	emitter_->Update();
+	bunny_->Update("bunny");
 
-	ParticleManager::GetInstance()->Update(mainCamera_);
+	//emitter_->Update();
+
+	//ParticleManager::GetInstance()->Update(mainCamera_);
 
 	ImGui::Begin("Window");
 	
@@ -153,6 +162,7 @@ void GameScene::Update() {
 
 		player_->SetCamera(mainCamera_);
 		object3d_->SetCamera(mainCamera_);
+		bunny_->SetCamera(mainCamera_);
 
 	}
 	if (ImGui::RadioButton("DebugCamera", isActiveDebugCamera_)) {
@@ -162,6 +172,7 @@ void GameScene::Update() {
 
 		player_->SetCamera(mainCamera_);
 		object3d_->SetCamera(mainCamera_);
+		bunny_->SetCamera(mainCamera_);
 	}
 	/*
 	ImGui::RadioButton("BlendModeNone", &blendMode, static_cast<int>(BlendMode::kBlendModeNone));
@@ -196,7 +207,9 @@ void GameScene::Draw() {
 	//プレイヤーの描画
 	player_->Draw();
 	//3dオブジェクトの描画
-	//object3d_->Draw();
+	object3d_->Draw();
+
+	bunny_->Draw();
 
 	//ParticleManager::GetInstance()->Draw();
 

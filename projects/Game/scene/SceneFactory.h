@@ -4,6 +4,7 @@
 
 class SceneFactory : public AbstractSceneFactory
 {
+public:
 	///<summary>
 	///シーン生成
 	/// </summary>
