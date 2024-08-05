@@ -16,6 +16,8 @@ public:
 
 	void CreateFromOBJ(const std::string& directoryPath, const std::string& filename);
 
+	void CreateSphere(uint32_t textureHandle);
+
 	void Draw(const Transforms& transform, Camera* camera);
 
 	Material& GetMaterialDataAddress() { return *materialData_; }

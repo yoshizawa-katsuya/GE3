@@ -66,6 +66,7 @@ private:
 	std::unique_ptr<Model> model_;
 	std::unique_ptr<Model> modelAxis_;
 	std::unique_ptr<Model> modelBunny_;
+	std::unique_ptr<Model> modelSphere_;
 
 	//std::vector<std::unique_ptr<Sprite>> sprites_;
 	std::unique_ptr<Sprite> sprite_;
@@ -76,6 +77,7 @@ private:
 	//3Dオブジェクト
 	std::unique_ptr<Object3d> object3d_;
 	std::unique_ptr<Object3d> bunny_;
+	std::unique_ptr<Object3d> sphere_;
 
 	//std::unique_ptr<ParticleEmitter> emitter_;
 

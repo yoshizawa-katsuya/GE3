@@ -51,6 +51,10 @@ void GameScene::Initialize() {
 	modelBunny_->Initialize(modelPlatform_);
 	modelBunny_->CreateFromOBJ("./resources", "bunny.obj");
 
+	modelSphere_ = std::make_unique<Model>();
+	modelSphere_->Initialize(modelPlatform_);
+	modelSphere_->CreateSphere(textureHandle_[0]);
+
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->Initialize(textureHandle_[0], spritePlatform_);
 	sprite_->SetPosition({ 100.0f, 100.0f });
@@ -80,6 +84,9 @@ void GameScene::Initialize() {
 	bunny_ = std::make_unique<Object3d>();
 	bunny_->Initialize(modelBunny_.get(), mainCamera_);
 
+	sphere_ = std::make_unique<Object3d>();
+	sphere_->Initialize(modelSphere_.get(), mainCamera_);
+
 	//emitter_ = std::make_unique<ParticleEmitter>("circle", 3, 0.5f);
 	//emitter_->Initialize(textureHandle_[0]);
 
@@ -100,6 +107,8 @@ void GameScene::Update() {
 	object3d_->Update("teapot");
 
 	bunny_->Update("bunny");
+
+	sphere_->Update("sphere");
 
 	//emitter_->Update();
 
@@ -163,6 +172,7 @@ void GameScene::Update() {
 		player_->SetCamera(mainCamera_);
 		object3d_->SetCamera(mainCamera_);
 		bunny_->SetCamera(mainCamera_);
+		sphere_->SetCamera(mainCamera_);
 
 	}
 	if (ImGui::RadioButton("DebugCamera", isActiveDebugCamera_)) {
@@ -173,6 +183,8 @@ void GameScene::Update() {
 		player_->SetCamera(mainCamera_);
 		object3d_->SetCamera(mainCamera_);
 		bunny_->SetCamera(mainCamera_);
+		sphere_->SetCamera(mainCamera_);
+
 	}
 	/*
 	ImGui::RadioButton("BlendModeNone", &blendMode, static_cast<int>(BlendMode::kBlendModeNone));
@@ -210,6 +222,8 @@ void GameScene::Draw() {
 	object3d_->Draw();
 
 	bunny_->Draw();
+
+	sphere_->Draw();
 
 	//ParticleManager::GetInstance()->Draw();
 
