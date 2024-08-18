@@ -7,7 +7,6 @@ void Object3d::Initialize(Model* model, Camera* camera)
 	model_ = model;
 	camera_ = camera;
 
-	transform_.translate.x = 3.0f;
 }
 
 void Object3d::Update(const std::string& label)

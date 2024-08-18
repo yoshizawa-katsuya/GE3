@@ -14,6 +14,8 @@ public:
 
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
+	void SetTransform(const Transforms& transform) { transform_ = transform; }
+
 private:
 
 	//Transform変数を作る

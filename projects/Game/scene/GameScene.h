@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdlib>
 #include <memory>
+#include <map>
 #include "BaseScene.h"
 #include "Struct.h"
 #include "DirectXCommon.h"
@@ -63,21 +64,18 @@ private:
 	//平行光源
 	std::unique_ptr<DirectionalLight> directionalLight_;
 
-	std::unique_ptr<Model> model_;
-	std::unique_ptr<Model> modelAxis_;
-	std::unique_ptr<Model> modelBunny_;
-	std::unique_ptr<Model> modelSphere_;
+	//std::unique_ptr<Model> model_;
+	std::map<std::string, Model*> models_;
 
 	//std::vector<std::unique_ptr<Sprite>> sprites_;
-	std::unique_ptr<Sprite> sprite_;
+	//std::unique_ptr<Sprite> sprite_;
 
 	//プレイヤー
-	std::unique_ptr<Player> player_;
+	//std::unique_ptr<Player> player_;
 
 	//3Dオブジェクト
-	std::unique_ptr<Object3d> object3d_;
-	std::unique_ptr<Object3d> bunny_;
-	std::unique_ptr<Object3d> sphere_;
+	//std::unique_ptr<Object3d> object3d_;
+	std::vector<Object3d*> objects_;
 
 	//std::unique_ptr<ParticleEmitter> emitter_;
 

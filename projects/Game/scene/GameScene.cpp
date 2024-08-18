@@ -3,10 +3,17 @@
 #include "dx12.h"
 #include "imgui/imgui.h"
 #include "ParticleManager.h"
+#include "LevelDataLoader.h"
 
 GameScene::~GameScene() {
 
+	for (auto& model : models_) {
+		delete model.second;
+	}
 
+	for (Object3d* object : objects_) {
+		delete object;
+	}
 
 }
 
@@ -39,25 +46,41 @@ void GameScene::Initialize() {
 
 	soundData1_ = audio_->SoundLoadWave("./resources/Alarm01.wav");
 
+	/*
 	model_ = std::make_unique<Model>();
 	model_->Initialize(modelPlatform_);
 	model_->CreateFromOBJ("./resources", "plane.obj");
-
-	modelAxis_ = std::make_unique<Model>();
-	modelAxis_->Initialize(modelPlatform_);
-	modelAxis_->CreateFromOBJ("./resources", "teapot.obj");
+	*/
 	
-	modelBunny_ = std::make_unique<Model>();
-	modelBunny_->Initialize(modelPlatform_);
-	modelBunny_->CreateFromOBJ("./resources", "bunny.obj");
+	Model* newModel = new Model();
+	newModel->Initialize(modelPlatform_);
+	newModel->CreateFromOBJ("./resources", "plane.obj");
+	models_.insert(std::make_pair("plane", newModel));
 
-	modelSphere_ = std::make_unique<Model>();
-	modelSphere_->Initialize(modelPlatform_);
-	modelSphere_->CreateSphere(textureHandle_[0]);
+	newModel = new Model();
+	newModel->Initialize(modelPlatform_);
+	newModel->CreateFromOBJ("./resources", "axis.obj");
+	models_.insert(std::make_pair("axis", newModel));
 
-	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(textureHandle_[0], spritePlatform_);
-	sprite_->SetPosition({ 100.0f, 100.0f });
+	LevelData* levelData = LevelDataLoad("./resources/", "levelData", ".json");
+
+	//レベルデータからオブジェクトを生成、配置
+	for (ObjectData& objectData : levelData->objects) {
+		//ファイルから登録済みモデルを検索
+		Model* model = nullptr;
+		decltype(models_)::iterator it = models_.find(objectData.fileName);
+		if (it != models_.end())
+		{
+			model = it->second;
+		}
+		//モデルを指定して3Dオブジェクトを生成
+		Object3d* newObject = new Object3d();
+		newObject->Initialize(model, mainCamera_);
+
+		newObject->SetTransform(objectData.transform);
+		//配列に登録
+		objects_.push_back(newObject);
+	}
 
 	/*
 	for (uint32_t i = 0; i < 5; ++i) {
@@ -72,7 +95,7 @@ void GameScene::Initialize() {
 		sprite->SetPosition(position);
 		sprites_.push_back(std::move(sprite));
 	}
-	*/
+	
 	//プレイヤーの初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(model_.get(), mainCamera_);
@@ -80,12 +103,8 @@ void GameScene::Initialize() {
 	//3dオブジェクトの初期化
 	object3d_ = std::make_unique<Object3d>();
 	object3d_->Initialize(modelAxis_.get(), mainCamera_);
-
-	bunny_ = std::make_unique<Object3d>();
-	bunny_->Initialize(modelBunny_.get(), mainCamera_);
-
-	sphere_ = std::make_unique<Object3d>();
-	sphere_->Initialize(modelSphere_.get(), mainCamera_);
+	*/
+	
 
 	//emitter_ = std::make_unique<ParticleEmitter>("circle", 3, 0.5f);
 	//emitter_->Initialize(textureHandle_[0]);
@@ -101,21 +120,19 @@ void GameScene::Update() {
 	}
 
 	//プレイヤーの更新
-	player_->Update();
+	//player_->Update();
 
 	//3dオブジェクトの更新
-	object3d_->Update("teapot");
+	//object3d_->Update("teapot");
 
-	bunny_->Update("bunny");
-
-	sphere_->Update("sphere");
+	
 
 	//emitter_->Update();
 
 	//ParticleManager::GetInstance()->Update(mainCamera_);
 
 	ImGui::Begin("Window");
-	
+	/*
 	if (ImGui::TreeNode("Sprite")) {
 		ImGui::DragFloat2("tranlate", &sprite_->GetPosition().x, 0.01f);
 		ImGui::DragFloat2("size", &sprite_->GetSize().x, 0.01f);
@@ -137,7 +154,7 @@ void GameScene::Update() {
 
 		ImGui::TreePop();
 	}
-	
+	*/
 	if (ImGui::TreeNode("camera")) {
 		ImGui::DragFloat3("translate", &camera_->GetTranslate().x, 0.01f);
 		ImGui::DragFloat3("rotate", &camera_->GetRotate().x, 0.01f);
@@ -169,10 +186,9 @@ void GameScene::Update() {
 
 		mainCamera_ = camera_.get();
 
-		player_->SetCamera(mainCamera_);
-		object3d_->SetCamera(mainCamera_);
-		bunny_->SetCamera(mainCamera_);
-		sphere_->SetCamera(mainCamera_);
+		//player_->SetCamera(mainCamera_);
+		//object3d_->SetCamera(mainCamera_);
+		
 
 	}
 	if (ImGui::RadioButton("DebugCamera", isActiveDebugCamera_)) {
@@ -180,10 +196,9 @@ void GameScene::Update() {
 
 		mainCamera_ = camera2_.get();
 
-		player_->SetCamera(mainCamera_);
-		object3d_->SetCamera(mainCamera_);
-		bunny_->SetCamera(mainCamera_);
-		sphere_->SetCamera(mainCamera_);
+		//player_->SetCamera(mainCamera_);
+		//object3d_->SetCamera(mainCamera_);
+		
 
 	}
 	/*
@@ -217,13 +232,13 @@ void GameScene::Draw() {
 	//Modelの描画前処理
 	modelPlatform_->PreDraw();
 	//プレイヤーの描画
-	player_->Draw();
+	//player_->Draw();
 	//3dオブジェクトの描画
-	object3d_->Draw();
+	//object3d_->Draw();
 
-	bunny_->Draw();
-
-	sphere_->Draw();
+	for (Object3d* object : objects_) {
+		object->Draw();
+	}
 
 	//ParticleManager::GetInstance()->Draw();
 
@@ -240,7 +255,7 @@ void GameScene::Draw() {
 		sprite->Draw();
 	}
 	*/
-	sprite_->Draw();
+	//sprite_->Draw();
 
 }
 

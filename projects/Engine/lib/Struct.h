@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <list>
 #include <string>
 #include <xaudio2.h>
 
@@ -167,4 +168,15 @@ struct SoundData
 	BYTE* pBuffer;
 	//バッファのサイズ
 	unsigned int bufferSize;
+};
+
+struct ObjectData
+{
+	std::string fileName;
+	Transforms transform;
+};
+
+struct LevelData
+{
+	std::list<ObjectData> objects;
 };
