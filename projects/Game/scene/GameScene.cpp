@@ -41,7 +41,7 @@ void GameScene::Initialize() {
 
 	mainCamera_ = camera_.get();
 
-	textureHandle_[0] = TextureManager::GetInstance()->Load("./resources/uvChecker.png");
+	textureHandle_[0] = TextureManager::GetInstance()->Load("./resources/uvChecker.dds");
 	textureHandle_[1] = TextureManager::GetInstance()->Load("./resources/monsterBall.png");
 
 	soundData1_ = audio_->SoundLoadWave("./resources/Alarm01.wav");
@@ -81,6 +81,10 @@ void GameScene::Initialize() {
 		//配列に登録
 		objects_.push_back(newObject);
 	}
+
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->Initialize(textureHandle_[0], spritePlatform_);
+	sprite_->SetPosition({ 100.0f, 100.0f });
 
 	/*
 	for (uint32_t i = 0; i < 5; ++i) {
@@ -132,7 +136,7 @@ void GameScene::Update() {
 	//ParticleManager::GetInstance()->Update(mainCamera_);
 
 	ImGui::Begin("Window");
-	/*
+	
 	if (ImGui::TreeNode("Sprite")) {
 		ImGui::DragFloat2("tranlate", &sprite_->GetPosition().x, 0.01f);
 		ImGui::DragFloat2("size", &sprite_->GetSize().x, 0.01f);
@@ -154,7 +158,7 @@ void GameScene::Update() {
 
 		ImGui::TreePop();
 	}
-	*/
+	
 	if (ImGui::TreeNode("camera")) {
 		ImGui::DragFloat3("translate", &camera_->GetTranslate().x, 0.01f);
 		ImGui::DragFloat3("rotate", &camera_->GetRotate().x, 0.01f);
@@ -255,7 +259,7 @@ void GameScene::Draw() {
 		sprite->Draw();
 	}
 	*/
-	//sprite_->Draw();
+	sprite_->Draw();
 
 }
 

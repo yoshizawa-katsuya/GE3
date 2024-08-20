@@ -102,17 +102,47 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	//テクスチャファイルを読み込んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = StringUtility::ConvertString(filePath);
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-	assert(SUCCEEDED(hr));
 
-	//ミップマップの作成
-	DirectX::ScratchImage mipImages{};
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-	assert(SUCCEEDED(hr));
+	size_t pos1;
+	//ファイル拡張子
+	std::wstring fileExt;
+
+	//区切り文字'.'が出てくる一番最後の部分を検索
+	pos1 = filePathW.rfind('.');
+	//検索がヒットしたら
+	if (pos1 != std::wstring::npos) {
+		//区切り文字の後ろをファイル拡張子として保存
+		fileExt = filePathW.substr(pos1 + 1, filePathW.size() - pos1 - 1);
+	}
+	else {
+		fileExt = L"";
+	}
+
+	HRESULT hr;
+	if (fileExt == L"dds") {
+		//DDSテクスチャのロード
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_FORCE_RGB, nullptr, image);
+		assert(SUCCEEDED(hr));
+
+	}
+	else {
+		//WICテクスチャのロード
+		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+		assert(SUCCEEDED(hr));
+
+		//ミップマップの作成
+		DirectX::ScratchImage mipImages{};
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
+		assert(SUCCEEDED(hr));
+		if (SUCCEEDED(hr)) {
+			image = std::move(mipImages);
+		}
+
+	}
 
 	//ミップマップ付きのデータを返す
 	texture.filePath = filePath;
-	texture.metadata = mipImages.GetMetadata();
+	texture.metadata = image.GetMetadata();
 	texture.resource = dxCommon_->CreateTextureResource(texture.metadata);
 
 	//SRVを作成するDescriptorHeapの場所を決める。先頭はImGuiが使っているのでその次を使う
@@ -123,11 +153,11 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 
 
 	//Meta情報を取得
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
+	const DirectX::TexMetadata& metadata = image.GetMetadata();
 	//全MipMapについて
 	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
 		//MipMapLevelを指定して各Imageを取得
-		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
+		const DirectX::Image* img = image.GetImage(mipLevel, 0, 0);
 		//Textureに転送
 		HRESULT hr = texture.resource->WriteToSubresource(
 			UINT(mipLevel),
