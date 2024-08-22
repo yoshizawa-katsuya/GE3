@@ -54,12 +54,12 @@ void GameScene::Initialize() {
 	
 	Model* newModel = new Model();
 	newModel->Initialize(modelPlatform_);
-	newModel->CreateFromOBJ("./resources", "plane.obj");
+	newModel->CreateModel("./resources", "plane.obj");
 	models_.insert(std::make_pair("plane", newModel));
 
 	newModel = new Model();
 	newModel->Initialize(modelPlatform_);
-	newModel->CreateFromOBJ("./resources", "axis.obj");
+	newModel->CreateModel("./resources", "axis.obj");
 	models_.insert(std::make_pair("axis", newModel));
 
 	LevelData* levelData = LevelDataLoad("./resources/", "levelData", ".json");

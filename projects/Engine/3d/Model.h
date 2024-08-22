@@ -4,6 +4,9 @@
 #include <Windows.h>
 #include <d3d12.h>
 #include <wrl.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 class ModelPlatform;
 class Camera;
 
@@ -14,7 +17,7 @@ public:
 	
 	void Initialize(ModelPlatform* modelPlatform);
 
-	void CreateFromOBJ(const std::string& directoryPath, const std::string& filename);
+	void CreateModel(const std::string& directoryPath, const std::string& filename);
 
 	void CreateSphere(uint32_t textureHandle);
 
@@ -38,11 +41,12 @@ private:
 	void CreateTransformData();
 
 	//objファイルの読み込み
-	void LoadObjFile(const std::string& directoryPath, const std::string& filename);
+	void LoadModelFile(const std::string& directoryPath, const std::string& filename);
 
 	//mtlファイルの読み込み
 	void LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
+	Node ReadNode(aiNode* node);
 	
 	ModelPlatform* modelPlatform_ = nullptr;
 
